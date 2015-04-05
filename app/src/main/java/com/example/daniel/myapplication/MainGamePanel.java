@@ -29,6 +29,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private ArrayList<Entity> entities;
     private LinkedList<Entity> shots;
     private Entity e;
+    private boolean running = true;
+    private boolean over = false;
+
     private SensorManager sManager;
     float axisY;
     float axisX;
@@ -45,11 +48,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
         getHolder().addCallback(this);
         setFocusable(true);
-        e = new Entity(null, 20f,20f,100f,100f, Color.BLUE, this);
+
         entities = new ArrayList<Entity>();
         shots = new LinkedList<Entity>();
 
-        //entities.add(new Entity(null, 200f, 200f, 100f,100f, Color.RED));
     }
 
     @Override
@@ -84,19 +86,13 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     public boolean onTouchEvent(MotionEvent event){
         Log.d(TAG, event.getAction() + "");
         if(event.getAction()  == MotionEvent.ACTION_DOWN) {
-            Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
+            /*Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
             lastPosX = event.getX();
             lastPosY = event.getY();
-            /*if(event.getY() > getHeight() - 50){
-
-                thread.setRunning(false);
-                ((Activity)getContext()).finish();
-            }else{
-                Log.d(TAG, "Coords: x="+event.getX()+",y="+event.getY());
-            }*/
-            return true;
+            return true;*/
+            running = !running;
         }
-        if(event.getAction() == MotionEvent.ACTION_MOVE){
+        /*if(event.getAction() == MotionEvent.ACTION_MOVE){
             if (lastPosX != -1 && lastPosY != -1){
                 if(lastPosX-5 > event.getX()&&e.getLeft()>0){
                     e.setX(-1);
@@ -112,10 +108,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             lastPosX = event.getX();
             lastPosY = event.getY();
             return true;
-        }
+        }*/
         if(event.getAction() == MotionEvent.ACTION_UP){
-            lastPosX = -1;
-            lastPosY = -1;
+            /*lastPosX = -1;
+            lastPosY = -1;*/
         }
         return super.onTouchEvent(event);
     }
@@ -172,7 +168,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 e.setX(-4);
                 return;
             }
-            if (e.x==600)
+            if (e.x==getWidth()-e.spriteWidth)
             {
                 return;
             }
@@ -182,21 +178,27 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void update(){
-        ArrayList<Entity> remove = new ArrayList<Entity>();
-        e.update();
-        for(Entity f: entities){
-            f.update();
+        if(e==null){
+            e = new Player(null, getWidth()/2-50f,getHeight()-120f,100f,100f, Color.BLUE, this);
         }
-        for(Entity f: shots){
-            f.update();
-            if(!f.getAlive()){
-                remove.add(f);
+        if(running) {
+            ArrayList<Entity> remove = new ArrayList<Entity>();
+            e.update();
+            for (Entity f : entities) {
+                f.update();
             }
+            for (Entity f : shots) {
+                f.update();
+                if (!f.getAlive()) {
+                    remove.add(f);
+                }
+            }
+            for (Entity f : remove) {
+                shots.remove(f);
+            }
+            this.collision();
+            over = !e.getAlive();
         }
-        for(Entity f: remove){
-            shots.remove(f);
-        }
-        this.collision();
     }
 
     @Override
