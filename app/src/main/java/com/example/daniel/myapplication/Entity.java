@@ -15,6 +15,7 @@ public class Entity {
     protected static final String TAG = Entity.class.getSimpleName();
 
     protected boolean alive = true;
+    protected boolean enemy;
 
     protected Bitmap bitmap;
     protected RectF sourceRect;
@@ -37,7 +38,7 @@ public class Entity {
     }
 
 
-    public Entity(Bitmap bitmap, float x, float y, float width, float height, int c, MainGamePanel m){
+    public Entity(Bitmap bitmap, float x, float y, float width, float height, int c,boolean e, MainGamePanel m){
         this.bitmap = bitmap;
         this.x = x;
         this.y = y;
@@ -49,6 +50,7 @@ public class Entity {
         game = m;
         sourceRect = new RectF(x,y,x+spriteWidth, y+spriteHeight);
         p = new Paint(Color.BLUE);
+        enemy = e;
 
     }
 
@@ -85,6 +87,7 @@ public class Entity {
     public boolean getAlive(){
         return alive;
     }
+    public boolean getEnemy(){return enemy;}
     public void update(){}
 
     public void draw(Canvas canvas){
@@ -96,8 +99,9 @@ public class Entity {
 
     public boolean collision(List< Entity> entities){
         for(Entity e: entities){
-            if(sourceRect.intersect(e.getBox())){
+            if(sourceRect.intersect(e.getBox())&& enemy != e.getEnemy()){
                 alive = false;
+                e.alive  =false;
                 return true;
             }
         }

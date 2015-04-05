@@ -4,16 +4,18 @@ package com.example.daniel.myapplication;
  * Created by Daniel on 4/5/2015.
  */
 public class BulletBehavior extends ShootBehavior {
-    public BulletBehavior(MainGamePanel m){
-        super(m);
+    int time = 0;
+    public BulletBehavior(MainGamePanel m, int i, boolean e){
+        super(m,i,e);
     }
     @Override
     public void shoot(float x, float y){
-        if(cooldown <= 0){
-            cooldown = 10;
-            m.addShot(new Shot(null, x - 10, y - 30f,-1));
+        if(time >= cooldown){
+            time = 0;
+            m.addShot(new Shot(null, x - 10, y + 30f*dir, dir,enemy));
         }else{
-            cooldown--;
+            time++;
         }
     }
+
 }

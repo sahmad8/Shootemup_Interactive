@@ -28,9 +28,11 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private float lastPosY = -1;
     private ArrayList<Entity> entities;
     private LinkedList<Entity> shots;
+    private LinkedList<Entity> eShots;
     private Entity e;
     private boolean running = true;
     private boolean over = false;
+    private int cooldown;
 
     private SensorManager sManager;
     float axisY;
@@ -51,6 +53,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
         entities = new ArrayList<Entity>();
         shots = new LinkedList<Entity>();
+        eShots = new LinkedList<Entity>();
 
     }
 
@@ -179,13 +182,17 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     public void update(){
         if(e==null){
-            e = new Player(null, getWidth()/2-50f,getHeight()-120f,100f,100f, Color.BLUE, this);
+            e = new Player(null, getWidth()/2-50f,getHeight()-120f,100f,100f, Color.BLUE, false, this);
         }
         if(running) {
             ArrayList<Entity> remove = new ArrayList<Entity>();
             e.update();
             for (Entity f : entities) {
                 f.update();
+                if(f.getTop()>getHeight()||!f.getAlive()){
+                    remove.add(f);
+                    Log.d("test", "dead");
+                }
             }
             for (Entity f : shots) {
                 f.update();
@@ -193,11 +200,24 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                     remove.add(f);
                 }
             }
+            for (Entity f: eShots){
+                f.update();
+                if (!f.getAlive()) {
+                    remove.add(f);
+                }
+            }
             for (Entity f : remove) {
                 shots.remove(f);
+                entities.remove(f);
             }
             this.collision();
             over = !e.getAlive();
+            if(cooldown <=0&&!over) {
+                entities.add(new Enemy(null, (float) (Math.random() * (getWidth() - 100)), -100f, 100f, 100f, Color.GRAY, true, this));
+                cooldown = 120;
+            }else{
+                cooldown--;
+            }
         }
     }
 
@@ -218,6 +238,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     public void collision(){
         e.collision(entities);
+        e.collision(shots);
+        for(Entity f: entities){
+            f.collision(shots);
+        }
     }
 
 }

@@ -10,7 +10,7 @@ import android.graphics.RectF;
  */
 public class Shot extends Entity {
     private int dir;
-    public Shot(Bitmap bitmap, float x, float y,int u){
+    public Shot(Bitmap bitmap, float x, float y,int u, boolean e){
         this.bitmap = bitmap;
         this.x = x;
         this.y = y;
@@ -22,6 +22,7 @@ public class Shot extends Entity {
         sourceRect = new RectF(x,y,x+spriteWidth, y+spriteHeight);
         p = new Paint(Color.BLUE);
         dir = u;
+        enemy = e;
 
     }
     @Override
