@@ -1,7 +1,6 @@
 package com.example.daniel.myapplication;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.RectF;
 
 /**
@@ -9,8 +8,10 @@ import android.graphics.RectF;
  */
 public class Player extends Entity {
     private int score;
+    private ShootBehavior sb;
     public Player(Bitmap bitmap, float x, float y, float width, float height, int c, MainGamePanel m){
         super(bitmap,x,y,width,height,c,m);
+        sb = new BulletBehavior(m);
     }
 
     @Override
@@ -19,8 +20,7 @@ public class Player extends Entity {
             sourceRect = new RectF(x,y,x+spriteWidth, y+spriteHeight);
         }
         if(cooldown <=0&&alive) {
-            game.addShot(new Shot(null, x + spriteWidth / 2 - 5, y - 20f, 10f, 10f, Color.BLACK));
-            cooldown = 10;
+            sb.shoot(x+spriteWidth/2,y);
         }else{
             cooldown--;
         }
