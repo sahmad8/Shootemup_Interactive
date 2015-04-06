@@ -196,13 +196,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
             for (Entity f : shots) {
                 f.update();
-                if (!f.getAlive()) {
-                    remove.add(f);
-                }
-            }
-            for (Entity f: eShots){
-                f.update();
-                if (!f.getAlive()) {
+                if (f.getTop()>getHeight()||!f.getAlive()) {
                     remove.add(f);
                 }
             }
