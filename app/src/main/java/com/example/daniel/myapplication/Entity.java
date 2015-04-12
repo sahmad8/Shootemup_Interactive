@@ -94,6 +94,7 @@ public class Entity {
         if(alive) {
             p.setColor(this.color);
             canvas.drawRect(sourceRect, p);
+            
         }
     }
 

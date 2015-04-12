@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -33,9 +34,11 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private boolean running = true;
     private boolean over = false;
     private int cooldown;
+    private Context theContext;
 
+    MediaPlayer mp3power;
     private SensorManager sManager;
-    float axisY;
+    private SensorManager sManager2;
     float axisX;
     private TextView tv;
     private ImageView iv;
@@ -45,9 +48,12 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     public MainGamePanel(Context context){
         super(context);
-
+        theContext=context;
         sManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sManager2 = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
+        sManager2.registerListener(this, sManager2.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_GAME);
+        mp3power = MediaPlayer.create(theContext, R.raw.powernuke);
         getHolder().addCallback(this);
         setFocusable(true);
 
@@ -140,6 +146,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     {
         //unregister the sensor listener
         sManager.unregisterListener(this);
+        sManager2.unregisterListener(this);
         //super.onStop();
     }
 
@@ -150,35 +157,6 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     }
 
-
-    public void onSensorChanged(SensorEvent event) {
-        //axisX = event.values[0];
-        //tv.setText(Float.toString(axisX));
-        axisX = event.values[0];
-        if ((axisX > 2)||(axisX < -2))
-        {
-            // axisX=0;
-
-            /*axisY=axisX;
-            tv.setText(Float.toString(axisY));
-            float x=iv.getX();
-            tv2.setText(Float.toString(x));*/
-            if (axisX > 2) {
-                if (e.x==0)
-                {
-                    return;
-                }
-                e.setX(-4);
-                return;
-            }
-            if (e.x==getWidth()-e.spriteWidth)
-            {
-                return;
-            }
-            e.setX(4);
-        }
-        //tv.setText(Float.toString(axisY));
-    }
 
     public void update(){
         if(e==null){
@@ -237,5 +215,50 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             f.collision(shots);
         }
     }
+
+
+    /*
+ Sensor changed event
+ Used for when sensor values changed, called automatically.
+ We implement accelerometer for moving player in a constant y plane.
+ Also implement gyroscope. Feel free to change the threshold values in the if loops
+ Depending on if you want to move the player faster or how fast the user must flick their phone forwards.
+  */
+    public void onSensorChanged(SensorEvent event) {
+
+        int type= event.sensor.getType();                        //integer
+        axisX = event.values[0];
+        if (type==Sensor.TYPE_GYROSCOPE){
+            if ((axisX < -7)) {
+                // axisX=0;
+                if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).
+                                                                // We just start it here.
+                    mp3power.start();
+                }
+            }
+            /*
+            Add code for creating nuke (type of bullet, but special). Have to make it travel upwards.
+            Start at same x position of player. Above player's y position.
+             */
+        }
+
+        if ((axisX > 2.5)||(axisX < -2.5))
+        {
+            if (axisX > 2) {
+                if (e.x==0)
+                {
+                    return;
+                }
+                e.setX(-4);
+                return;
+            }
+            if (e.x==getWidth()-e.spriteWidth)
+            {
+                return;
+            }
+            e.setX(4);
+        }
+    }
+
 
 }
