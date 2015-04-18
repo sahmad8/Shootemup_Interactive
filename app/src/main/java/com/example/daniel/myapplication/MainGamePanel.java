@@ -1,221 +1,191 @@
 package com.example.daniel.myapplication;
 
+
+import android.media.MediaPlayer;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-
-
-
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
+public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback,SensorEventListener {
+    //for debug
+    private static final String TAG = MainGamePanel.class.getSimpleName();
 
-    private static final String TAG = MainThread.class.getSimpleName();
-    private float lastPosX = -1;
-    private float lastPosY = -1;
-    private ArrayList<Entity> entities;
-    private LinkedList<Entity> shots;
-    private LinkedList<Entity> eShots;
-    private Entity e;
-    private boolean running = true;
-    private boolean over = false;
-    private int cooldown;
     private Context theContext;
-
-    MediaPlayer mp3power;
-    private SensorManager sManager;
     private SensorManager sManager2;
-    float axisX;
-    private TextView tv;
-    private ImageView iv;
-    private TextView tv2;
+    private SensorManager sManager;
+    private float axisX;
+    private boolean running;
 
     private MainThread thread;
+    public MediaPlayer mp3power;
+    public MediaPlayer mp3menu;
 
-    public MainGamePanel(Context context){
+    private Player player1;
+    //private Entity player1;
+    private Enemies enemies;
+    private Context context;
+
+    private Bitmap bg1,bg2;
+    private Droid droid1,droid2;
+
+
+    public MainGamePanel(Context context) {
         super(context);
+        this.context=context;
         theContext=context;
         sManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sManager2 = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
         sManager2.registerListener(this, sManager2.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_GAME);
+        mp3menu= MediaPlayer.create(theContext, R.raw.menumusic);       //menu music, need to move this for the menu activity.
         mp3power = MediaPlayer.create(theContext, R.raw.powernuke);
+        //background
+        this.bg1 = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.background1);
+        droid1 = new Droid(bg1,0,0);
+        this.bg2 = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.background1);
+        droid2 = new Droid(bg2,0,0 - bg2.getHeight());
+
+        running = true;
+        sManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
+        axisX = 0;
+
+        // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
+        // make the GamePanel focusable so it can handle events
         setFocusable(true);
+    }
 
-        entities = new ArrayList<Entity>();
-        shots = new LinkedList<Entity>();
-        eShots = new LinkedList<Entity>();
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height){
+    public void surfaceCreated(SurfaceHolder holder) {
 
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder){
+        // at this point the surface is created and
+        // we can safely start the game loop
         thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder){
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        // tell the thread to shut down and wait for it to finish
+        // this is a clean shutdown
         boolean retry = true;
-        while(retry){
-            try{
+        while (retry) {
+            try {
                 thread.setRunning(false);
                 thread.join();
                 retry = false;
-            }catch(InterruptedException  e){
-
+            } catch (InterruptedException e) {
+                // try again shutting down the thread
             }
         }
     }
 
-
-
     @Override
-    public boolean onTouchEvent(MotionEvent event){
-        Log.d(TAG, event.getAction() + "");
-        if(event.getAction()  == MotionEvent.ACTION_DOWN) {
-            /*Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-            lastPosX = event.getX();
-            lastPosY = event.getY();
-            return true;*/
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            //thread.setRunning(!thread.getRunning());
             running = !running;
         }
-        /*if(event.getAction() == MotionEvent.ACTION_MOVE){
-            if (lastPosX != -1 && lastPosY != -1){
-                if(lastPosX-5 > event.getX()&&e.getLeft()>0){
-                    e.setX(-1);
-                }else if(lastPosX+5 < event.getX()&&e.getRight()<getWidth()){
-                    e.setX(1);
-                }
-                if(lastPosY-5 > event.getY()&&e.getTop()>0){
-                    e.setY(-1);
-                }else if(lastPosY+5 < event.getY()&&e.getBottom()<getHeight()){
-                    e.setY(1);
-                }
-            }
-            lastPosX = event.getX();
-            lastPosY = event.getY();
-            return true;
-        }*/
-        if(event.getAction() == MotionEvent.ACTION_UP){
-            /*lastPosX = -1;
-            lastPosY = -1;*/
-        }
         return super.onTouchEvent(event);
+        //return true;
     }
-
-    public void addShot(Entity e){
-        shots.add(e);
-    }
-
+    /*
     @Override
-    public void onDraw(Canvas canvas){
-
+    protected void onDraw(Canvas canvas) {
+        // fills the canvas with cyan
+        canvas.drawColor(Color.CYAN);
+        player1.setScreenWidth(getWidth());
+        player1.setScreenHeight(getHeight());
+        //update player1 status
+        player1.update(canvas);
     }
-
-    protected void onResume2(){
-
-        //super.
-        sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
-
-    }
-
-
-    protected void onStop2()
-    {
-        //unregister the sensor listener
-        sManager.unregisterListener(this);
-        sManager2.unregisterListener(this);
-        //super.onStop();
-    }
-
-
+    */
     @Override
-    public void onAccuracyChanged(Sensor arg0, int arg1)
-    {
-
-    }
-
-
-    public void update(){
-        if(e==null){
-            e = new Player(null, getWidth()/2-50f,getHeight()-120f,100f,100f, Color.BLUE, false, this);
-        }
+    public void draw(Canvas canvas) {
         if(running) {
-            ArrayList<Entity> remove = new ArrayList<Entity>();
-            e.update();
-            for (Entity f : entities) {
-                f.update();
-                if(f.getTop()>getHeight()||!f.getAlive()){
-                    remove.add(f);
-                    Log.d("test", "dead");
+            // fills the canvas with cyan
+            canvas.drawColor(Color.CYAN);
+            if(droid1.getY()==0){
+                droid2.setY(0 - droid2.getBitmap().getHeight());
+            }
+            if(droid2.getY()==0){
+                droid1.setY(0 - droid1.getBitmap().getHeight());
+            }
+
+            droid2.setY(droid2.getY()+2);
+            droid1.setY(droid1.getY()+2);
+            droid1.draw(canvas);
+            droid2.draw(canvas);
+
+
+            ArrayList<Enemy> tempE = new ArrayList<>();
+            ArrayList<Shot> tempS = new ArrayList<>();
+            if(player1!=null && enemies!=null){
+                for(Shot s : player1.getShots()){
+                    for(Enemy e : enemies.getEArray()){
+                        if(collision(s,e)){
+                            e.setLife(e.getLife()-s.getDamage());
+                            //tempE.add(e);
+                            tempS.add(s);
+                        }
+
+                    }
                 }
+                enemies.removeEArray(tempE);
+                player1.removeSArray(tempS);
             }
-            for (Entity f : shots) {
-                f.update();
-                if (f.getTop()>getHeight()||!f.getAlive()) {
-                    remove.add(f);
-                }
+
+
+
+
+
+
+
+            if (enemies == null) {
+                enemies = new Enemies(context, getWidth(), getHeight());
+            } else {
+                enemies.update(canvas,player1.getX(),player1.getY());
             }
-            for (Entity f : remove) {
-                shots.remove(f);
-                entities.remove(f);
-            }
-            this.collision();
-            over = !e.getAlive();
-            if(cooldown <=0&&!over) {
-                entities.add(new Enemy(null, (float) (Math.random() * (getWidth() - 100)), -100f, 100f, 100f, Color.GRAY, true, this));
-                cooldown = 120;
-            }else{
-                cooldown--;
+
+            if (player1 == null) {
+                player1 = new Player(context, getWidth(), getHeight());
+                mp3menu.start();
+            } else {
+                //update player1 status
+                player1.update(canvas);
             }
         }
+
+    }
+    private boolean collision(Shot E1, Enemy E2){
+        return ((E2.getX()<=E1.getX()+E1.getBmp().getWidth() && E1.getX()<=E2.getX()+E2.getBmp().getWidth()) ||
+                (E1.getX()<=E2.getX()+E2.getBmp().getWidth() && E2.getX()<=E1.getX()+E1.getBmp().getWidth())) &&
+                ((E2.getY()<=E1.getY()+E1.getBmp().getHeight() && E1.getY()<=E2.getY()+E2.getBmp().getHeight()) ||
+                        (E1.getY()<=E2.getY()+E2.getBmp().getHeight() && E2.getY()<=E1.getY()+E1.getBmp().getHeight()));
     }
 
     @Override
-    public void draw(Canvas canvas){
-        if(canvas != null) {
-            canvas.drawColor(Color.GREEN);
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-            for( Entity f: entities){
-                f.draw(canvas);
-            }
-            for( Entity f: shots){
-                f.draw(canvas);
-            }
-            e.draw(canvas);
-        }
     }
-
-    public void collision(){
-        e.collision(entities);
-        e.collision(shots);
-        for(Entity f: entities){
-            f.collision(shots);
-        }
-    }
-
 
     /*
  Sensor changed event
@@ -226,6 +196,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
   */
     public void onSensorChanged(SensorEvent event) {
 
+        player1.setScreenWidth(getWidth());
+        player1.setScreenHeight(getHeight());
         int type= event.sensor.getType();                        //integer
         axisX = event.values[0];
         if (type==Sensor.TYPE_GYROSCOPE){
@@ -242,23 +214,38 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
              */
         }
 
-        if ((axisX > 2.5)||(axisX < -2.5))
+        if ((axisX > 1.5)||(axisX < -1.5))
         {
-            if (axisX > 2) {
-                if (e.x==0)
+            if (axisX > 0) {
+                if (player1.getX()==0)
                 {
                     return;
                 }
-                e.setX(-4);
+                player1.ChangeX(true);
                 return;
             }
-            if (e.x==getWidth()-e.spriteWidth)
+            if (player1.getX()== getWidth()-100f)
             {
                 return;
             }
-            e.setX(4);
+            player1.ChangeX(false);
         }
     }
 
+    /**
+    Sensor changed method test.
+    Dependent on hardware (motion). The sensor changed event is called automatically.
+    We only test for a change in player positions (since this has to change because motion was detected).
+    Precondition: Current player position.
+    Postcondition: Change in player position.
+     */
+     public void testsensor () {
+         //runs with sensor changed event
+         //@Before (before sensor changed event starts running), save player position, sensor values
+         //@After(after sensorchanged event completed), save players position again
+         //Something like--> assertEquals (beforepostiion, afterpostion), if sensor values > abs|2.5|, player position should have changed. Then-->
+         //If they were equal, throw an error exception. Something is wrong in the implementation of changing player position inside sensor changed event.
+         //Else if sensor values< abs|2.5| , positions should be equal.
+     }
 
 }

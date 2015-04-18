@@ -1,113 +1,72 @@
 package com.example.daniel.myapplication;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-
-import java.util.List;
 
 /**
- * Created by Daniel on 3/18/2015.
+ * Created by Kevin Tsai on 2015/4/11.
  */
 public class Entity {
-    protected static final String TAG = Entity.class.getSimpleName();
+    private int ScreenWidth;
+    private int ScreenHeight;
 
-    protected boolean alive = true;
-    protected boolean enemy;
+    private Droid droid;
+    private Bitmap bmp;
 
-    protected Bitmap bitmap;
-    protected RectF sourceRect;
+    private int x;   // the X coordinate
+    private int y;   // the Y coordinate
+    private int changeX;
+    private int changeY;
 
-    protected float spriteWidth;
-    protected float spriteHeight;
-    protected float x;
-    protected float y;
+    protected int life;   //player life
 
-    protected double xv, yv;
-
-    protected Paint p;
-    protected int color;
-
-    protected MainGamePanel game;
-    protected int cooldown = 0;
-
-    protected Entity(){
+    protected  Entity(){
 
     }
 
-
-    public Entity(Bitmap bitmap, float x, float y, float width, float height, int c,boolean e, MainGamePanel m){
-        this.bitmap = bitmap;
-        this.x = x;
-        this.y = y;
-        xv = 10;
-        yv = 10;
-        spriteWidth = width;
-        spriteHeight = height;
-        color = c;
-        game = m;
-        sourceRect = new RectF(x,y,x+spriteWidth, y+spriteHeight);
-        p = new Paint(Color.BLUE);
-        enemy = e;
-
-    }
-
-    public void setX(float f){
-        if(f > 0){
-            x += xv;
-        }else if(f<0){
-            x -= xv;
-        }
-    }
-
-    public void setY(float f){
-        if(f > 0){
-            y += yv;
-        }else if(f<0){
-            y -= yv;
-        }
-    }
-    public float getLeft(){
-        return x;
-    }
-    public float getRight(){
-        return x+spriteWidth;
-    }
-    public float getTop(){
+    public int getY() {
         return y;
     }
-    public float getBottom(){
-        return y+spriteHeight;
-    }
-    public RectF getBox(){
-        return sourceRect;
-    }
-    public boolean getAlive(){
-        return alive;
-    }
-    public boolean getEnemy(){return enemy;}
-    public void update(){}
 
-    public void draw(Canvas canvas){
-        if(alive) {
-            p.setColor(this.color);
-            canvas.drawRect(sourceRect, p);
-            
-        }
+    public void setY(int y) {
+        this.y = y;
     }
 
-    public boolean collision(List< Entity> entities){
-        for(Entity e: entities){
-            if(sourceRect.intersect(e.getBox())&& enemy != e.getEnemy()){
-                alive = false;
-                e.alive  =false;
-                return true;
-            }
-        }
-        return false;
+    public int getX() {
+        return x;
     }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public Bitmap getBmp() {
+        return bmp;
+    }
+
+    public void setBmp(Bitmap bmp) {
+        this.bmp = bmp;
+    }
+
+
+
+    public int getScreenHeight() {
+        return ScreenHeight;
+    }
+
+    public void setScreenHeight(int screenHeight) {
+        ScreenHeight = screenHeight;
+    }
+
+    public int getScreenWidth() {
+        return ScreenWidth;
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        ScreenWidth = screenWidth;
+    }
+
+
 
 
 }
+
