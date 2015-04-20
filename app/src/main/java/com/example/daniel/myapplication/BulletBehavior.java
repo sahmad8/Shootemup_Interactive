@@ -4,7 +4,7 @@ package com.example.daniel.myapplication;
  * Created by Daniel on 4/5/2015.
  */
 public class BulletBehavior extends ShootBehavior {
-    int time = 0;
+    /*int time = 0;
     public BulletBehavior(MainGamePanel m, int i, boolean e){
         super(m,i,e);
     }
@@ -16,6 +16,6 @@ public class BulletBehavior extends ShootBehavior {
         }else{
             time++;
         }
-    }
+    }*/
 
 }

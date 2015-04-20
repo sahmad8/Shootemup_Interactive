@@ -1,37 +1,122 @@
 package com.example.daniel.myapplication;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 
 /**
- * Created by Daniel on 3/19/2015.
+ * Created by Kevin Tsai on 2015/4/11.
  */
-public class Shot extends Entity {
-    private int dir;
-    public Shot(Bitmap bitmap, float x, float y,int u, boolean e){
-        this.bitmap = bitmap;
-        this.x = x;
-        this.y = y;
-        xv = 20;
-        yv = 20;
-        spriteWidth = 20;
-        spriteHeight = 20;
-        color = Color.WHITE;
-        sourceRect = new RectF(x,y,x+spriteWidth, y+spriteHeight);
-        p = new Paint(Color.BLUE);
-        dir = u;
-        enemy = e;
+public class Shot extends Entity{
+    private Context context;
+
+    private int ScreenWidth;
+    private int ScreenHeight;
+
+    private Droid droid;
+    private Bitmap bmp;
+
+    private int x;   // the X coordinate
+    private int y;   // the Y coordinate
+    private int changeX;
+    private int changeY;
+    private boolean alive;
+    private int damage;
+    private int type; // 0:player, 1:enemy
+
+    // y = ax + b direction of the shot
+    // x = (y-b)/a
+    private int a;
+    private int b;
+    public Shot(Context context, int x, int y, int type, int Px, int Py){
+        this.context = context;
+        this.a = 0;
+        this.b = 0;
+        switch(type) {
+            case(0):
+                this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.shot_1);
+                this.x = x - this.bmp.getWidth()/2;
+                this.y = y;
+                break;
+            case(1):
+                this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.shot_2);
+                a = (y-Py)/(x-Px);
+                b = y-a*x;
+                break;
+            default:
+                break;
+        }
+
+        this.type = type;
+        this.alive = true;
+        damage = 1;
+        this.droid = new Droid(this.bmp, this.x, this.y);
+    }
+
+
+    public void checkAlive(int ScreenWidth, int ScreenHeight){
+        switch(type){
+            case(0):
+                y -= 5;
+                droid.setY(y);
+                if(!(0<=x && 0<=y)) {
+                    alive = false;
+                }
+                break;
+            case(1):
+                y += 2;
+                x = (y-b)/a;
+                droid.setX(x);
+                droid.setY(y);
+
+                if(ScreenHeight<=y) {
+                    alive = false;
+                }
+                break;
+            default:
+                break;
+        }
 
     }
     @Override
-    public void update(){
-        if(y+spriteHeight>0) {
-            y += yv*dir;
-            sourceRect = new RectF(x, y, x + spriteWidth, y + spriteHeight);
-        }else{
-            alive = false;
-        }
+    public Bitmap getBmp() {
+        return bmp;
+    }
+    public boolean isAlive() {
+
+        return alive;
+    }
+    public int getDamage(){
+        return damage;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public void setY(int y) {
+        this.y = y;
+    }
+
+
+    public void update(Canvas canvas){
+        droid.draw(canvas);
     }
 }
