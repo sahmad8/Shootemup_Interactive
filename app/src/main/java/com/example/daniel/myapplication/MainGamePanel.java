@@ -73,9 +73,6 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder){
-
-=======
     public void surfaceCreated(SurfaceHolder holder) {
 
         // at this point the surface is created and
