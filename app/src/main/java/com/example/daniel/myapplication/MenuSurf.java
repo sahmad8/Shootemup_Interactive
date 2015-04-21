@@ -18,12 +18,17 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     private static Context activity;
     private Canvas canvas;
     private MenuThread thread;
+    private RectF Button1;
+    private RectF Button2;
+    private RectF Button3;
 
     public MenuSurf(Context context) {
         super(context);
         getHolder().addCallback(this);
         setFocusable(true);
-
+        Button1 = new RectF(200, 300, 870, 500);
+        Button2 = new RectF(100, 400, 500, 200);
+        Button3 = new RectF(100, 700, 500, 200);
 
         activity = context;Log.d("test", "test");
     }
@@ -31,8 +36,16 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event){
         if(event.getAction()  == MotionEvent.ACTION_DOWN) {
-            Intent intent = new Intent(activity, GameTest.class);
-            activity.startActivity(intent);
+            RectF temp = new RectF(event.getX(), event.getY(),1,1);
+            if(Button1.contains(event.getX(),event.getY())){
+                Intent intent = new Intent(activity, GameTest.class);
+                activity.startActivity(intent);
+            }else if(Button2.contains(temp)){
+
+            }else if(Button3.contains(temp)){
+
+            }
+
         }
         return super.onTouchEvent(event);
     }
@@ -66,7 +79,9 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas c){
         if(c!=null) {
             c.drawColor(Color.YELLOW);
-            c.drawRect(new RectF(0, 0, 100, 100), new Paint(Color.BLUE));
+            c.drawRect(Button1,new Paint());
+            //c.drawRect(Button2,new Paint());
+            //c.drawRect(Button3,new Paint());
         }
     }
 }

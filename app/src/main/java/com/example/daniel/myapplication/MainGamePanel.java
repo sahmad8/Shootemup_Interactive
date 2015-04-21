@@ -1,7 +1,6 @@
 package com.example.daniel.myapplication;
 
 
-import android.media.MediaPlayer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -25,7 +25,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private SensorManager sManager2;
     private SensorManager sManager;
     private float axisX;
-    private boolean running;
+    private boolean running = false;
 
     private MainThread thread;
     public MediaPlayer mp3power;
@@ -196,39 +196,38 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
   */
     public void onSensorChanged(SensorEvent event) {
 
-        player1.setScreenWidth(getWidth());
-        player1.setScreenHeight(getHeight());
-        int type= event.sensor.getType();                        //integer
-        axisX = event.values[0];
-        if (type==Sensor.TYPE_GYROSCOPE){
-            if ((axisX < -7)) {
-                // axisX=0;
-                if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).
-                                                                // We just start it here.
-                    mp3power.start();
+        if(player1 != null){
+            player1.setScreenWidth(getWidth());
+            player1.setScreenHeight(getHeight());
+            int type = event.sensor.getType();                        //integer
+            axisX = event.values[0];
+            if (type == Sensor.TYPE_GYROSCOPE) {
+                if ((axisX < -7)) {
+                    // axisX=0;
+                    if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).
+                        // We just start it here.
+                        mp3power.start();
+                    }
                 }
+                /*
+                Add code for creating nuke (type of bullet, but special). Have to make it travel upwards.
+                Start at same x position of player. Above player's y position.
+                 */
             }
-            /*
-            Add code for creating nuke (type of bullet, but special). Have to make it travel upwards.
-            Start at same x position of player. Above player's y position.
-             */
-        }
 
-        if ((axisX > 1.5)||(axisX < -1.5))
-        {
-            if (axisX > 0) {
-                if (player1.getX()==0)
-                {
+            if ((axisX > 1.5) || (axisX < -1.5)) {
+                if (axisX > 0) {
+                    if (player1.getX() == 0) {
+                        return;
+                    }
+                    player1.ChangeX(true);
                     return;
                 }
-                player1.ChangeX(true);
-                return;
+                if (player1.getX() == getWidth() - 100f) {
+                    return;
+                }
+                player1.ChangeX(false);
             }
-            if (player1.getX()== getWidth()-100f)
-            {
-                return;
-            }
-            player1.ChangeX(false);
         }
     }
 

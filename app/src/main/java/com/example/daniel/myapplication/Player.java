@@ -39,7 +39,7 @@ public class Player extends Entity{
         this.Shots = new ArrayList<Shot>();
         this.removeList = new ArrayList<Shot>();
         this.ShotCreateCountDown = 0;
-        this.life = 100;
+        this.life = 1;
 
         this.changeX = 10;
         this.changeY = 10;
