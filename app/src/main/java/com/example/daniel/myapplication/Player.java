@@ -39,7 +39,7 @@ public class Player extends Entity{
         this.Shots = new ArrayList<Shot>();
         this.removeList = new ArrayList<Shot>();
         this.ShotCreateCountDown = 0;
-        this.life = 1;
+        this.life = 100;
 
         this.changeX = 10;
         this.changeY = 10;
@@ -50,7 +50,7 @@ public class Player extends Entity{
 
         this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.ship1);
         this.x = ScreenWidth/2 -bmp.getWidth()/2;
-        this.y = ScreenHeight - bmp.getHeight();
+        this.y = ScreenHeight - bmp.getHeight()-100;
         this.droid = new Droid(this.bmp, x, y);
 
     }

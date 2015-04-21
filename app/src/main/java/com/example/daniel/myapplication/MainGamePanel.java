@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -39,6 +41,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private Bitmap bg1,bg2;
     private Droid droid1,droid2;
 
+    private RectF UI = new RectF(0,getHeight()-90,getWidth(),getHeight());
+    private int score;
+
 
     public MainGamePanel(Context context) {
         super(context);
@@ -60,6 +65,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         sManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
         axisX = 0;
+        score = 0;
 
         // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
@@ -145,6 +151,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                             e.setLife(e.getLife()-s.getDamage());
                             //tempE.add(e);
                             tempS.add(s);
+                            if(e.getLife()<=0){
+                                score += 100;
+                            }
                         }
 
                     }
@@ -173,6 +182,14 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 player1.update(canvas);
             }
         }
+        Paint p = new Paint();
+        p.setColor(Color.DKGRAY);
+        canvas.drawRect(UI,p);
+        p.setColor(Color.WHITE);
+        p.setTextSize(50);
+        canvas.drawText("Score:" + score,getWidth()-400,getHeight()-10,p );
+        canvas.drawText("Health: " + player1.getLife(),50, getHeight()-10,p);
+
 
     }
     private boolean collision(Shot E1, Enemy E2){
@@ -215,7 +232,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                  */
             }
 
-            if ((axisX > 1.5) || (axisX < -1.5)) {
+            if (running&&((axisX > 1.5) || (axisX < -1.5))) {
                 if (axisX > 0) {
                     if (player1.getX() == 0) {
                         return;
