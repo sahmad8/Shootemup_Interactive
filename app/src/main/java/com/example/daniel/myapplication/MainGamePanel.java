@@ -181,10 +181,14 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 //update player1 status
                 player1.update(canvas);
             }
+            if(player1.boom){
+                score += 100*enemies.clear();
+                player1.boom = false;
+            }
         }
         Paint p = new Paint();
         p.setColor(Color.DKGRAY);
-        canvas.drawRect(UI,p);
+        canvas.drawRect(new RectF(0,getHeight()-90,getWidth(),getHeight()),p);
         p.setColor(Color.WHITE);
         p.setTextSize(50);
         canvas.drawText("Score:" + score,getWidth()-400,getHeight()-10,p );
@@ -224,6 +228,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                     if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).
                         // We just start it here.
                         mp3power.start();
+                        player1.fireM();
+
                     }
                 }
                 /*

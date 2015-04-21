@@ -72,4 +72,10 @@ public class Enemies {
             e.update(canvas,Px,Py);
         }
     }
+    public int clear(){
+        int temp = eArray.size();
+        eArray.clear();
+        esArray.clear();
+        return temp;
+    }
 }

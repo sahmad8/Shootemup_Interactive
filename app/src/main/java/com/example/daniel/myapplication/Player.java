@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,8 @@ import java.util.ArrayList;
  */
 public class Player extends Entity{
     private int ShotCreateCountDown;
+    private Missile missile;
+    public boolean boom = false;
     private ArrayList<Shot> Shots;
     private ArrayList<Shot> removeList;
 
@@ -141,8 +144,22 @@ public class Player extends Entity{
         for(Shot s: Shots){
             s.update(canvas);
         }
+        if(missile !=  null) {
+            if (missile.isAlive()) {
+                Log.d("position: ", "" + missile.getY());
+                missile.checkAlive(ScreenWidth, ScreenHeight);
+                missile.update(canvas);
+            } else {
+                boom = true;
+                missile = null;
+            }
+        }
 
 
+    }
+    public void fireM(){
+        Log.d("stuff", "stuff");
+        missile = new Missile(context,x+bmp.getWidth()/2,y,0,0);
     }
 
 }
