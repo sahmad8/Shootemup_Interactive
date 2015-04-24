@@ -20,8 +20,8 @@ public class Player extends Entity{
     private ArrayList<Shot> removeList;
 
     private Context context;
-    private int ScreenWidth;
-    private int ScreenHeight;
+    //private int ScreenWidth;
+    //private int ScreenHeight;
 
     private Droid droid;
     private Bitmap bmp;
@@ -92,10 +92,11 @@ public class Player extends Entity{
     public int getY(){
         return y;
     }
-
+    /*
     public void setScreenWidth(int ScreenWidth){
         this.ScreenWidth = ScreenWidth;
     }
+    */
 
     public int getLife() {
         return life;

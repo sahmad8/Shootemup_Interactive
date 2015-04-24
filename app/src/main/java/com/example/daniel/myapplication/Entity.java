@@ -6,16 +6,16 @@ import android.graphics.Bitmap;
  * Created by Kevin Tsai on 2015/4/11.
  */
 public class Entity {
-    private int ScreenWidth;
-    private int ScreenHeight;
+    protected int ScreenWidth;
+    protected int ScreenHeight;
 
-    private Droid droid;
-    private Bitmap bmp;
+    protected Droid droid;
+    protected Bitmap bmp;
 
-    private int x;   // the X coordinate
-    private int y;   // the Y coordinate
-    private int changeX;
-    private int changeY;
+    protected int x;   // the X coordinate
+    protected int y;   // the Y coordinate
+    protected int changeX;
+    protected int changeY;
 
     protected int life;   //player life
 
@@ -38,6 +38,7 @@ public class Entity {
     public void setX(int x) {
         this.x = x;
     }
+
 
     public Bitmap getBmp() {
         return bmp;

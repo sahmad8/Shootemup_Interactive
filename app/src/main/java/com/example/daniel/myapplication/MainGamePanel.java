@@ -145,9 +145,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             ArrayList<Enemy> tempE = new ArrayList<>();
             ArrayList<Shot> tempS = new ArrayList<>();
             if(player1!=null && enemies!=null){
-                for(Shot s : player1.getShots()){
-                    for(Enemy e : enemies.getEArray()){
-                        if(collision(s,e)){
+                for(Enemy e : enemies.getEArray()){
+                    for(Shot s : player1.getShots()){
+                            if(collision(s,e)){
                             e.setLife(e.getLife()-s.getDamage());
                             //tempE.add(e);
                             tempS.add(s);
@@ -155,7 +155,16 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                                 score += 100;
                             }
                         }
-
+                    }
+                    if(collision(e,player1)){
+                        player1.setLife(player1.getLife()-5);
+                        e.setLife(0);
+                    }
+                    for(Shot es : e.getShots()){
+                        if(collision(es,player1)){
+                            es.setAlive(false);
+                            player1.setLife(player1.getLife()-3);
+                        }
                     }
                 }
                 enemies.removeEArray(tempE);
@@ -196,7 +205,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 
     }
-    private boolean collision(Shot E1, Enemy E2){
+    private boolean collision(Entity E1, Entity E2){
         return ((E2.getX()<=E1.getX()+E1.getBmp().getWidth() && E1.getX()<=E2.getX()+E2.getBmp().getWidth()) ||
                 (E1.getX()<=E2.getX()+E2.getBmp().getWidth() && E2.getX()<=E1.getX()+E1.getBmp().getWidth())) &&
                 ((E2.getY()<=E1.getY()+E1.getBmp().getHeight() && E1.getY()<=E2.getY()+E2.getBmp().getHeight()) ||

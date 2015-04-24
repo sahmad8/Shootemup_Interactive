@@ -50,7 +50,7 @@ public class Enemies {
         count1 = (count1 + 1)%40;
         //count2 = (count2 + 1)%40;
         //count3 = (count3 + 1)%40;
-        if(count1==0){  count2 = (count2+1)%10000;  }
+        if(count1==0){  count2 = (count2+1)%25;  }
         if(count2==0){  count3 ++;  }
     }
     public void update(Canvas canvas, int Px, int Py){

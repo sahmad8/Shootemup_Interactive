@@ -212,4 +212,7 @@ public class Enemy extends Entity{
         return false;
     }
 
+    public ArrayList<Shot> getShots(){
+        return Shots;
+    }
 }
