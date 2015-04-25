@@ -2,6 +2,8 @@ package com.example.daniel.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,6 +23,8 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     private RectF Button1;
     private RectF Button2;
     private RectF Button3;
+    private Bitmap bg1,bg2;
+    private Droid droid1,droid2;
 
     public MenuSurf(Context context) {
         super(context);
@@ -29,6 +33,12 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
         Button1 = new RectF(200, 300, 870, 500);
         Button2 = new RectF(100, 400, 500, 200);
         Button3 = new RectF(100, 700, 500, 200);
+
+        //background
+        this.bg1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background1);
+        droid1 = new Droid(bg1,0,0);
+        this.bg2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background1);
+        droid2 = new Droid(bg2,0,0 - bg2.getHeight());
 
         activity = context;Log.d("test", "test");
     }
@@ -79,7 +89,24 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas c){
         if(c!=null) {
             c.drawColor(Color.YELLOW);
+
+
+
+            // fills the canvas with cyan
+            if(droid1.getY()==0){
+                droid2.setY(0 - droid2.getBitmap().getHeight());
+            }
+            if(droid2.getY()==0){
+                droid1.setY(0 - droid1.getBitmap().getHeight());
+            }
+
+            droid2.setY(droid2.getY()+2);
+            droid1.setY(droid1.getY()+2);
+            droid1.draw(c);
+            droid2.draw(c);
+
             c.drawRect(Button1,new Paint());
+
             //c.drawRect(Button2,new Paint());
             //c.drawRect(Button3,new Paint());
         }

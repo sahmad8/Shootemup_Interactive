@@ -218,6 +218,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             if(over){
                 t.setTextSize(150);
                 canvas.drawText("Game Over", getWidth() / 2, getHeight() / 5, t);
+                //t.setTextSize(150);
+                t.setTextSize(getWidth()/6);
+                canvas.drawText("Game Over", getWidth()/2,getHeight()/5,t);
             }
             t.setTextSize(75);
             canvas.drawText("Score:" + score, getWidth() / 2, getHeight() / 3, t);
