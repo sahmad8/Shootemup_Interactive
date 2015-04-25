@@ -45,7 +45,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private Bitmap bg1,bg2;
     private Droid droid1,droid2;
 
-    private int score;
+    private static int score;
 
 
 
