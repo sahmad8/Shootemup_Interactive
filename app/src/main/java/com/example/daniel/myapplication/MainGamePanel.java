@@ -214,7 +214,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             t.setColor(Color.WHITE);
             t.setTextAlign(Paint.Align.CENTER);
             if(over){
-                t.setTextSize(150);
+                //t.setTextSize(150);
+                t.setTextSize(getWidth()/6);
                 canvas.drawText("Game Over", getWidth()/2,getHeight()/5,t);
             }
             t.setTextSize(75);
