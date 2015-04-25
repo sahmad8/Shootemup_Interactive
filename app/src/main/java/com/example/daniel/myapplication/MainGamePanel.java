@@ -18,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.daniel.myapplication.test.SendScore;
+
 import java.util.ArrayList;
 
 public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback,SensorEventListener {
@@ -115,7 +117,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             }else {
                 RectF menuB = new RectF(getWidth()/5,getHeight()*3/5,getWidth()*4/5,getHeight()*3/5+200);
                 if (menuB.contains(event.getX(), event.getY())) {
-                    Intent intent = new Intent(context, Menu.class);
+                    Intent intent = new Intent(context, SendScore.class);
                     context.startActivity(intent);
                 }else{
                     running = !running;
@@ -220,7 +222,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             t.setTextSize(getWidth()/15);
             canvas.drawText("Score:" + score, getWidth()/2, getHeight()/3,t);
             t.setColor(Color.DKGRAY);
-            canvas.drawRect(new RectF(getWidth()/5,getHeight()*3/5,getWidth()*4/5,getHeight()*3/5+200),t);
+            canvas.drawRect(new RectF(getWidth() / 5, getHeight() * 3 / 5, getWidth() * 4 / 5, getHeight() * 3 / 5 + 200), t);
             t.setColor(Color.WHITE);
             canvas.drawText("Return to Menu", getWidth()/2, getHeight()*3/5+125, t);
         }
