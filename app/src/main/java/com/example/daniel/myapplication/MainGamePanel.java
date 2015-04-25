@@ -114,9 +114,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             //thread.setRunning(!thread.getRunning());
             if(running) {
                 running = !running;
-            }else {
-                RectF menuB = new RectF(getWidth()/5,getHeight()*3/5,getWidth()*4/5,getHeight()*3/5+200);
-                if (menuB.contains(event.getX(), event.getY())) {
+                if(new RectF(getWidth() / 5, getHeight() * 3 / 5, getWidth() * 4 / 5, getHeight() * 3 / 5 + 200).contains(event.getX(), event.getY())){
+                    Intent intent = new Intent(context, Menu.class);
+                    context.startActivity(intent);
+                }else if(new RectF(getWidth() / 5, getHeight() * 4 / 5, getWidth() * 4 / 5, getHeight() * 4 / 5 + getHeight()/9).contains(event.getX(), event.getY())) {
                     Intent intent = new Intent(context, SendScore.class);
                     context.startActivity(intent);
                 }else{
@@ -218,13 +219,18 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             if(over){
                 t.setTextSize(getWidth()/6);
                 canvas.drawText("Game Over", getWidth()/2,getHeight()/5,t);
+                t.setColor(Color.DKGRAY);
+                canvas.drawRect(new RectF(getWidth() / 5, getHeight() * 4 / 5, getWidth() * 4 / 5, getHeight() * 4 / 5 + getHeight()/9), t);
+                t.setColor(Color.WHITE);
+                t.setTextSize(getWidth()/15);
+                canvas.drawText("Submit Score", getWidth()/2, getHeight()*4/5+getHeight()/14, t);
             }
             t.setTextSize(getWidth()/15);
             canvas.drawText("Score:" + score, getWidth()/2, getHeight()/3,t);
             t.setColor(Color.DKGRAY);
-            canvas.drawRect(new RectF(getWidth() / 5, getHeight() * 3 / 5, getWidth() * 4 / 5, getHeight() * 3 / 5 + 200), t);
+            canvas.drawRect(new RectF(getWidth() / 5, getHeight() * 3 / 5, getWidth() * 4 / 5, getHeight() * 3 / 5 + getHeight()/9), t);
             t.setColor(Color.WHITE);
-            canvas.drawText("Return to Menu", getWidth()/2, getHeight()*3/5+125, t);
+            canvas.drawText("Return to Menu", getWidth()/2, getHeight()*3/5+getHeight()/14, t);
         }
         Paint p = new Paint();
         p.setColor(Color.DKGRAY);
