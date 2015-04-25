@@ -214,10 +214,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             t.setColor(Color.WHITE);
             t.setTextAlign(Paint.Align.CENTER);
             if(over){
-                t.setTextSize(150);
+                t.setTextSize(getWidth()/6);
                 canvas.drawText("Game Over", getWidth()/2,getHeight()/5,t);
             }
-            t.setTextSize(75);
+            t.setTextSize(getWidth()/15);
             canvas.drawText("Score:" + score, getWidth()/2, getHeight()/3,t);
             t.setColor(Color.DKGRAY);
             canvas.drawRect(new RectF(getWidth()/5,getHeight()*3/5,getWidth()*4/5,getHeight()*3/5+200),t);
@@ -228,9 +228,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         p.setColor(Color.DKGRAY);
         canvas.drawRect(new RectF(0,getHeight()-90,getWidth(),getHeight()),p);
         p.setColor(Color.WHITE);
-        p.setTextSize(50);
-        canvas.drawText("Score:" + score,getWidth()-400,getHeight()-10,p );
-        canvas.drawText("Health: " + player1.getLife(),50, getHeight()-10,p);
+        p.setTextSize(getWidth()/20);
+        canvas.drawText("Score:" + score,getWidth()*2/3,getHeight()-10,p );
+        canvas.drawText("Health: " + player1.getLife(),getWidth()/15, getHeight()-10,p);
 
 
     }
