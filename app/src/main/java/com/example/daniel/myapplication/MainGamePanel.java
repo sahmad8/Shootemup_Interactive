@@ -2,6 +2,7 @@ package com.example.daniel.myapplication;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -28,6 +29,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private SensorManager sManager;
     private float axisX;
     private boolean running = false;
+    private boolean over = false;
 
     private MainThread thread;
     public MediaPlayer mp3power;
@@ -41,8 +43,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private Bitmap bg1,bg2;
     private Droid droid1,droid2;
 
-    private RectF UI = new RectF(0,getHeight()-90,getWidth(),getHeight());
     private int score;
+
 
 
     public MainGamePanel(Context context) {
@@ -108,7 +110,17 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //thread.setRunning(!thread.getRunning());
-            running = !running;
+            if(running) {
+                running = !running;
+            }else {
+                RectF menuB = new RectF(getWidth()/5,getHeight()*3/5,getWidth()*4/5,getHeight()*3/5+200);
+                if (menuB.contains(event.getX(), event.getY())) {
+                    Intent intent = new Intent(context, Menu.class);
+                    context.startActivity(intent);
+                }else{
+                    running = !running;
+                }
+            }
         }
         return super.onTouchEvent(event);
         //return true;
@@ -126,7 +138,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     */
     @Override
     public void draw(Canvas canvas) {
-        if(running) {
+        if(running&&!over) {
             // fills the canvas with cyan
             canvas.drawColor(Color.CYAN);
             if(droid1.getY()==0){
@@ -194,6 +206,23 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 score += 100*enemies.clear();
                 player1.boom = false;
             }
+            if(player1.getLife()<=0){
+                over = true;
+            }
+        }else{
+            Paint t = new Paint();
+            t.setColor(Color.WHITE);
+            t.setTextAlign(Paint.Align.CENTER);
+            if(over){
+                t.setTextSize(150);
+                canvas.drawText("Game Over", getWidth()/2,getHeight()/5,t);
+            }
+            t.setTextSize(75);
+            canvas.drawText("Score:" + score, getWidth()/2, getHeight()/3,t);
+            t.setColor(Color.DKGRAY);
+            canvas.drawRect(new RectF(getWidth()/5,getHeight()*3/5,getWidth()*4/5,getHeight()*3/5+200),t);
+            t.setColor(Color.WHITE);
+            canvas.drawText("Return to Menu", getWidth()/2, getHeight()*3/5+125, t);
         }
         Paint p = new Paint();
         p.setColor(Color.DKGRAY);
