@@ -25,12 +25,16 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     private RectF Button3;
     private Bitmap bg1,bg2;
     private Droid droid1,droid2;
+    private int height;
+    private int width;
 
     public MenuSurf(Context context) {
         super(context);
         getHolder().addCallback(this);
         setFocusable(true);
-        Button1 = new RectF(200, 300, 870, 500);
+        height = getHeight();
+        width = getWidth();
+        Button1 = new RectF(getWidth()/5,getHeight()*2/5,getWidth()*4/5,getHeight()*2/5+200);
         Button2 = new RectF(100, 400, 500, 200);
         Button3 = new RectF(100, 700, 500, 200);
 
@@ -46,13 +50,12 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event){
         if(event.getAction()  == MotionEvent.ACTION_DOWN) {
-            RectF temp = new RectF(event.getX(), event.getY(),1,1);
-            if(Button1.contains(event.getX(),event.getY())){
+            if(new RectF(getWidth()/5,getHeight()*2/5,getWidth()*4/5,getHeight()*2/5+getHeight()/9).contains(event.getX(),event.getY())){
                 Intent intent = new Intent(activity, GameTest.class);
                 activity.startActivity(intent);
-            }else if(Button2.contains(temp)){
+            }else if(Button2.contains(event.getX(),event.getY())){
 
-            }else if(Button3.contains(temp)){
+            }else if(Button3.contains(event.getX(),event.getY())){
 
             }
 
@@ -104,8 +107,17 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
             droid1.setY(droid1.getY()+2);
             droid1.draw(c);
             droid2.draw(c);
-
-            c.drawRect(Button1,new Paint());
+            Paint p = new Paint();
+            p.setTextAlign(Paint.Align.CENTER);
+            p.setColor(Color.WHITE);
+            p.setTextSize(getWidth() / 7);
+            c.drawText("Galactic Clash", getWidth()/2, getHeight()/5, p);
+            //canvas.drawText("Galatctic Clash",width/2,height/5,new Paint());
+            p.setTextSize(getWidth() / 15);
+            p.setColor(Color.DKGRAY);
+            c.drawRect(new RectF(getWidth()/5,getHeight()*2/5,getWidth()*4/5,getHeight()*2/5+getHeight()/9),p);
+            p.setColor(Color.WHITE);
+            c.drawText("New Game",getWidth()/2, getHeight()*2/5+getHeight()/14, p);
 
             //c.drawRect(Button2,new Paint());
             //c.drawRect(Button3,new Paint());
