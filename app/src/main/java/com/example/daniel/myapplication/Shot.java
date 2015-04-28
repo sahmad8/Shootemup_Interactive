@@ -27,8 +27,8 @@ public class Shot extends Entity{
 
     // y = ax + b direction of the shot
     // x = (y-b)/a
-    private int a;
-    private int b;
+    private float a;
+    private float b;
     public Shot(Context context, int x, int y, int type, int Px, int Py){
         this.context = context;
         this.a = 0;
@@ -36,18 +36,17 @@ public class Shot extends Entity{
         switch(type) {
             case(0):
                 this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.shot_1);
-                this.x = x - this.bmp.getWidth()/2;
-                this.y = y;
                 break;
             case(1):
                 this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.shot_2);
-                a = (y-Py)/(x-Px);
-                b = y-a*x;
+                a = (float)((y-Py)/(x-Px));
+                b = (y-a*(float)x);
                 break;
             default:
                 break;
         }
-
+        this.x = x - this.bmp.getWidth()/2;
+        this.y = y;
         this.type = type;
         this.alive = true;
         damage = 1;
@@ -65,8 +64,8 @@ public class Shot extends Entity{
                 }
                 break;
             case(1):
-                y += 2;
-                x = (y-b)/a;
+                y += 4;
+                x = (int)((y-b)/a);
                 droid.setX(x);
                 droid.setY(y);
 

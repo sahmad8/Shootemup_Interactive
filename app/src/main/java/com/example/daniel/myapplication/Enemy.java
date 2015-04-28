@@ -34,7 +34,10 @@ public class Enemy extends Entity{
     private int count;
     private int life;   //player life
 
-    //Init Player
+    //for enemy 2
+    private boolean GoRight;
+
+    //Init Enemy
     public Enemy(Context context, int ScreenWidth, int ScreenHeight,int x, int y, int type) {
         this.context = context;
         this.Shots = new ArrayList<Shot>();
@@ -44,7 +47,8 @@ public class Enemy extends Entity{
         this.type = type;
         this.life = 2;
 
-        //this.changeX = 10;
+        this.GoRight = true;
+        this.changeX = 10;
         //this.changeY = 10;
 
 
@@ -68,7 +72,8 @@ public class Enemy extends Entity{
 
                 break;
             case 2:
-
+                this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.enemy3);
+                this.life = 100;
                 break;
             case 3:
 
@@ -82,7 +87,7 @@ public class Enemy extends Entity{
 
         }
         this.x = x-bmp.getWidth()/2;
-        this.y = y-bmp.getHeight();
+        this.y = y;
         this.droid = new Droid(this.bmp, x, y);
     }
 
@@ -133,7 +138,7 @@ public class Enemy extends Entity{
         switch(type){
             case 0:
                 count++;
-                if(count==20){Shots.add(new Shot(this.context,this.x,this.y,1, Px, Py));}
+                if(count==20){Shots.add(new Shot(this.context,this.x,this.y+bmp.getHeight(),1, Px, Py));}
                 x+=5;
                 if(x>ScreenWidth+bmp.getWidth()){
                     for(Shot s : Shots){
@@ -148,6 +153,12 @@ public class Enemy extends Entity{
                 if(y>ScreenHeight){ life = 0;   }
                 break;
             case 2:
+                if(life>0 && count%5==0 && 0<=count%100 && count%100<=25){ Shots.add(new Shot(this.context,this.x,this.y+bmp.getHeight(),1, Px, Py)); }
+                count = (count+1)%100;
+
+                if(x>=ScreenWidth){ changeX = -5;   }
+                if(x<=0){   changeX = 5;    }
+                x += changeX;
 
                 break;
             case 3:

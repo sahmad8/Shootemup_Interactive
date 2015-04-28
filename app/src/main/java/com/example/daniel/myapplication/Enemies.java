@@ -47,10 +47,14 @@ public class Enemies {
         if(count2>=20 && count1 == 0 && 0<=count2%10 && count2%10<=4){// &&20<=count2 && count2<=24) {
             eArray.add(new Enemy(context, ScreenWidth, ScreenHeight, 0, 70, 0));
         }
+        if(count3 == 50){
+            eArray.add(new Enemy(context, ScreenWidth, ScreenHeight, 0, 70, 2));
+
+        }
         count1 = (count1 + 1)%40;
         //count2 = (count2 + 1)%40;
         //count3 = (count3 + 1)%40;
-        if(count1==0){  count2 = (count2+1)%25;  }
+        if(count1==0){  count2 = (count2+1)%40;  }
         if(count2==0){  count3 ++;  }
     }
     public void update(Canvas canvas, int Px, int Py){
