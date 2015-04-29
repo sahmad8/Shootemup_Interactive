@@ -18,8 +18,6 @@ public class Menu extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         MenuSurf m = new MenuSurf(this);
         setContentView(m);
-
-
     }
 
     @Override

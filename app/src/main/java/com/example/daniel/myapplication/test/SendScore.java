@@ -1,4 +1,5 @@
 package com.example.daniel.myapplication.test;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.daniel.myapplication.GameTest;
+import com.example.daniel.myapplication.MainGamePanel;
 import com.example.daniel.myapplication.R;
 
 import org.apache.http.HttpResponse;
@@ -31,10 +34,13 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
     private EditText value;
     private Button btn;
     private ProgressBar pb;
+    private int playerscore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        playerscore = intent.getIntExtra("thescore",0);
         setContentView(R.layout.activity_send_score);
         value=(EditText)findViewById(R.id.editText1);
         btn=(Button)findViewById(R.id.button1);
@@ -101,15 +107,15 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
         public void postData(String valueIWantToSend) {
             // Create a new HttpClient and Post Header
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://1-dot-saadhttp.appspot.com/test");
+            HttpPost httppost = new HttpPost("http://1-dot-galacticlashandroid.appspot.com/test");
             try {
                 // Add your data
+                String scorestring=""+playerscore;
                 httppost.addHeader("thename", valueIWantToSend);
-                // List<NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
-                //nameValuePairs.add(new BasicNameValuePair(, valueIWantToSend));
-                //httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                // Execute HTTP Post Request
+                httppost.addHeader("score", scorestring);
                 HttpResponse response = httpclient.execute(httppost);
+                Intent newgame= new Intent(SendScore.this, Menu.class);            //comment this out to get rid of the error
+                startActivity(newgame);
             } catch (ClientProtocolException e) {
                 // TODO Auto-generated catch block
             } catch (IOException e) {

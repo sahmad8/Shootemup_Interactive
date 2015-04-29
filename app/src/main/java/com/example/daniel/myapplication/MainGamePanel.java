@@ -45,7 +45,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private Bitmap bg1,bg2;
     private Droid droid1,droid2;
 
-    private static int score;
+    public static int score;
 
 
 
@@ -119,9 +119,12 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                     context.startActivity(intent);
                 }else if(new RectF(getWidth() / 5, getHeight() * 4 / 5, getWidth() * 4 / 5, getHeight() * 4 / 5 + getHeight()/9).contains(event.getX(), event.getY())) {
                     Intent intent = new Intent(context, SendScore.class);
-                    context.startActivity(intent);
+                    intent.putExtra("thescore",score ) ;
+                    mp3menu.stop();
+                     context.startActivity(intent);
                 }else{
                     running = !running;
+                    mp3menu.stop();
                 }
             }
         }
