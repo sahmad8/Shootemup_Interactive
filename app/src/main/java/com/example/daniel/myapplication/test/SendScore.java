@@ -1,8 +1,8 @@
 package com.example.daniel.myapplication.test;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,22 +11,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.daniel.myapplication.GameTest;
-import com.example.daniel.myapplication.MainGamePanel;
 import com.example.daniel.myapplication.R;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class SendScore extends ActionBarActivity implements View.OnClickListener {
@@ -114,8 +107,9 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
                 httppost.addHeader("thename", valueIWantToSend);
                 httppost.addHeader("score", scorestring);
                 HttpResponse response = httpclient.execute(httppost);
-                Intent newgame= new Intent(SendScore.this, Menu.class);            //comment this out to get rid of the error
-                startActivity(newgame);
+                //Intent newgame= new Intent(SendScore.this, Menu.class);            //comment this out to get rid of the error
+                //startActivity(newgame);
+                finish();
             } catch (ClientProtocolException e) {
                 // TODO Auto-generated catch block
             } catch (IOException e) {

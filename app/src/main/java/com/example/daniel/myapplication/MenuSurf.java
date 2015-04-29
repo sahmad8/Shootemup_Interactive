@@ -1,5 +1,6 @@
 package com.example.daniel.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     private Droid droid1,droid2;
     private int height;
     private int width;
+    private boolean running = true;
 
     public MenuSurf(Context context) {
         super(context);
@@ -52,7 +54,13 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
         if(event.getAction()  == MotionEvent.ACTION_DOWN) {
             if(new RectF(getWidth()/5,getHeight()*2/5,getWidth()*4/5,getHeight()*2/5+getHeight()/9).contains(event.getX(),event.getY())){
                 Intent intent = new Intent(activity, GameTest.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 activity.startActivity(intent);
+                ((Activity)activity).finish();
+                running = false;
+                bg1.recycle();
+                bg2.recycle();
             }else if(Button2.contains(event.getX(),event.getY())){
 
             }else if(Button3.contains(event.getX(),event.getY())){
@@ -90,8 +98,8 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void draw(Canvas c){
-        if(c!=null) {
-            c.drawColor(Color.YELLOW);
+        if(c!=null&&running) {
+            c.drawColor(Color.BLACK);
 
 
 
@@ -105,8 +113,12 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
 
             droid2.setY(droid2.getY()+2);
             droid1.setY(droid1.getY()+2);
-            droid1.draw(c);
-            droid2.draw(c);
+            if(!bg1.isRecycled()&&!bg2.isRecycled()) {
+                droid1.draw(c);
+
+            }
+            if(!bg1.isRecycled()&&!bg2.isRecycled())
+                droid2.draw(c);
             Paint p = new Paint();
             p.setTextAlign(Paint.Align.CENTER);
             p.setColor(Color.WHITE);

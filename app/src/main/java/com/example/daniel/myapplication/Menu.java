@@ -27,7 +27,7 @@ public class Menu extends Activity {
 
     @Override
     protected void onStop(){
-        super.onStop();
+        super.onStop(); finish();
     }
 
 
