@@ -1,6 +1,7 @@
 package com.example.daniel.myapplication;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -97,6 +98,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceDestroyed(SurfaceHolder holder) {
         // tell the thread to shut down and wait for it to finish
         // this is a clean shutdown
+        running = false;
         boolean retry = true;
         while (retry) {
             try {
@@ -119,15 +121,26 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             }else{
                 if(new RectF(getWidth() / 5, getHeight() * 3 / 5, getWidth() * 4 / 5, getHeight() * 3 / 5 + 200).contains(event.getX(), event.getY())){
                     Intent intent = new Intent(context, Menu.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     context.startActivity(intent);
+                    ((Activity)context).finish();
+                    bg1.recycle();
+                    bg2.recycle();
+                    mp3menu.stop();
                 }else if(new RectF(getWidth() / 5, getHeight() * 4 / 5, getWidth() * 4 / 5, getHeight() * 4 / 5 + getHeight()/9).contains(event.getX(), event.getY())) {
                     Intent intent = new Intent(context, SendScore.class);
-                    intent.putExtra("thescore",score ) ;
+                    intent.putExtra("thescore",score );
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     mp3menu.stop();
                      context.startActivity(intent);
+                    ((Activity)context).finish();
+                    bg1.recycle();
+                    bg2.recycle();
                 }else{
                     running = !running;
-                    mp3menu.stop();
+
                 }
             }
         }
@@ -149,7 +162,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     public void draw(Canvas canvas) {
         if(running&&!over) {
             // fills the canvas with cyan
-            canvas.drawColor(Color.CYAN);
+            canvas.drawColor(Color.BLACK);
             if(droid1.getY()==0){
                 droid2.setY(0 - droid2.getBitmap().getHeight());
             }
@@ -159,8 +172,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
             droid2.setY(droid2.getY()+2);
             droid1.setY(droid1.getY()+2);
-            droid1.draw(canvas);
-            droid2.draw(canvas);
+            if(!bg1.isRecycled()&&!bg2.isRecycled()) {
+                droid1.draw(canvas);
+                droid2.draw(canvas);
+            }
 
 
             ArrayList<Enemy> tempE = new ArrayList<>();
@@ -274,7 +289,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             player1.setScreenHeight(getHeight());
             int type = event.sensor.getType();                        //integer
             axisX = event.values[0];
-            if (type == Sensor.TYPE_GYROSCOPE) {
+            if (type == Sensor.TYPE_GYROSCOPE&&running) {
                 if ((axisX < -7)) {
                     // axisX=0;
                     if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).
