@@ -39,7 +39,11 @@ public class Shot extends Entity{
                 break;
             case(1):
                 this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.shot_2);
-                a = (float)((y-Py)/(x-Px));
+                if(x-Px !=0) {
+                    a = ((y - Py) / (float)(x - Px));
+                }else{
+                    a = (float) ((y - Py));
+                }
                 b = (y-a*(float)x);
                 break;
             default:
@@ -116,6 +120,12 @@ public class Shot extends Entity{
 
 
     public void update(Canvas canvas){
-        droid.draw(canvas);
+        if(!bmp.isRecycled()) {
+            droid.draw(canvas);
+        }
+    }
+
+    public void recycle(){
+        bmp.recycle();
     }
 }

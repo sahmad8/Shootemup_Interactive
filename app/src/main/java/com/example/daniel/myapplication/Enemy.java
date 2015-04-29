@@ -90,6 +90,9 @@ public class Enemy extends Entity{
         this.y = y;
         this.droid = new Droid(this.bmp, x, y);
     }
+    public int getType(){
+        return type;
+    }
 
     public void ChangeX(boolean goLeft){
         /*
@@ -178,8 +181,11 @@ public class Enemy extends Entity{
         //canvas.drawText(Integer.toString(ScreenWidth),0,Integer.toString(ScreenWidth).length(),50,100,new Paint());
         droid.setX(x);
         droid.setY(y);
-        if(life>0) {
+        if(life>0&&!bmp.isRecycled()) {
             droid.draw(canvas);
+        }
+        else{
+            bmp.recycle();
         }
     }
 
@@ -203,6 +209,7 @@ public class Enemy extends Entity{
         }
 
         for(Shot r:removeList){
+            r.recycle();
             Shots.remove(r);
         }
 

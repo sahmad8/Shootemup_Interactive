@@ -128,7 +128,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                     bg1.recycle();
                     bg2.recycle();
                     mp3menu.stop();
-                }else if(new RectF(getWidth() / 5, getHeight() * 4 / 5, getWidth() * 4 / 5, getHeight() * 4 / 5 + getHeight()/9).contains(event.getX(), event.getY())) {
+                }else if(over && new RectF(getWidth() / 5, getHeight() * 4 / 5, getWidth() * 4 / 5, getHeight() * 4 / 5 + getHeight()/9).contains(event.getX(), event.getY())) {
                     Intent intent = new Intent(context, SendScore.class);
                     intent.putExtra("thescore",score );
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -289,7 +289,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             player1.setScreenHeight(getHeight());
             int type = event.sensor.getType();                        //integer
             axisX = event.values[0];
-            if (type == Sensor.TYPE_GYROSCOPE&&running) {
+            if (type == Sensor.TYPE_GYROSCOPE&&running&&!player1.spent) {
                 if ((axisX < -7)) {
                     // axisX=0;
                     if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).

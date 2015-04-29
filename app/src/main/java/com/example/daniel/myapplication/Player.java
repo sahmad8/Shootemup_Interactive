@@ -30,6 +30,7 @@ public class Player extends Entity{
     private int y;   // the Y coordinate
     private int changeX;
     private int changeY;
+    public boolean spent = false;
 
 
 

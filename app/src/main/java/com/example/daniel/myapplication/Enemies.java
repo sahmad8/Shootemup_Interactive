@@ -78,7 +78,12 @@ public class Enemies {
     }
     public int clear(){
         int temp = eArray.size();
-        eArray.clear();
+        for(Enemy e: eArray){
+            if(e.getType()!=3){
+                e.setLife(e.getLife()-3);
+            }
+        }
+        //eArray.clear();
         esArray.clear();
         return temp;
     }
