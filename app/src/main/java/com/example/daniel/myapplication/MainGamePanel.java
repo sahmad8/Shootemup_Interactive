@@ -14,6 +14,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -113,7 +114,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //thread.setRunning(!thread.getRunning());
             if(running) {
-                running = !running;
+                Log.d("Stuff", "stuff");
+                running = false;
+            }else{
                 if(new RectF(getWidth() / 5, getHeight() * 3 / 5, getWidth() * 4 / 5, getHeight() * 3 / 5 + 200).contains(event.getX(), event.getY())){
                     Intent intent = new Intent(context, Menu.class);
                     context.startActivity(intent);
