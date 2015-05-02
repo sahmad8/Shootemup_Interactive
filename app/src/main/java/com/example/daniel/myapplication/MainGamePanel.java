@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import com.example.daniel.myapplication.test.SendScore;
 
@@ -270,7 +271,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         //draw the missile cool down bar
         p.setColor(Color.YELLOW);
         if(MissileCountDown == 500){    p.setColor(Color.RED);  }
-        canvas.drawRect(new RectF(getWidth() / 15, getHeight() - 70, (getWidth() / 15)+(MissileCountDown/5), getHeight() - 60), p);
+        canvas.drawRect(new RectF(getWidth() / 15, getHeight() - 70, (getWidth() / 15) + (MissileCountDown / 5), getHeight() - 60), p);
 
 
     }
@@ -308,34 +309,25 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                     MissileCountDown = 0;
                     mp3power.start();
                     player1.fireM();
-                    /*
-                    // axisX=0;
-                    if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).
-                        // We just start it here.
-                        mp3power.start();
-                        player1.fireM();
-
-                    }
-                    */
+                    return;
                 }
                 /*
                 Add code for creating nuke (type of bullet, but special). Have to make it travel upwards.
                 Start at same x position of player. Above player's y position.
                  */
             }
-
-            if ((axisX > 1.5) || (axisX < -1.5)) {
+            if ((axisX > 1.85) || (axisX < -1.85)) {
                 if (axisX > 0) {
                     if (player1.getX() == 0) {
                         return;
                     }
-                    player1.ChangeX(true);
+                    player1.ChangeX(axisX);
                     return;
                 }
                 if (player1.getX() == getWidth() - 100f) {
                     return;
                 }
-                player1.ChangeX(false);
+                player1.ChangeX(axisX);
             }
         }
     }

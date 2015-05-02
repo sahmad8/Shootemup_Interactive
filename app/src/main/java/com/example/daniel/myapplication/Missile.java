@@ -33,7 +33,7 @@ public class Missile extends Entity {
         this.context = context;
         this.a = 0;
         this.b = 0;
-        this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.droid_1);
+        this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.nuke);
         this.y = y;
         this.x = x;
 

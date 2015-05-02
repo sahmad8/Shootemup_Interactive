@@ -66,14 +66,26 @@ public class Player extends Entity{
     public Bitmap getBmp(){
         return bmp;
     }
-    public void ChangeX(boolean goLeft){
-        if(goLeft){    this.x -= changeX;  }
-        else{   this.x += changeX;  }
+
+
+
+    /*
+    Had to change the below method. Before it took a boolean. Now it takes the float value of the accelerometer reading
+    so we can apply a formula to make "how much the user tilts his phone" be a factor on how quickly
+    the player's position is changed. --SAAD
+     */
+
+    public void ChangeX(float value){
+        if(value > 0){    this.x -= (int)(1.95* value)  ; }
+        else{   this.x += (int)(2.10)*value*-1;  }
 
         if(this.x < 0){    this.x = 0;    }
         else if(this.x > (ScreenWidth - bmp.getWidth())){ this.x = (ScreenWidth - bmp.getWidth());   }
         droid.setX(x);
     }
+
+
+
 
     //Set player x
     public void setX(int x){
@@ -161,7 +173,7 @@ public class Player extends Entity{
     }
     public void fireM(){
         Log.d("stuff", "stuff");
-        missile = new Missile(context,x+bmp.getWidth()/2,y,0,0);
+        missile = new Missile(context,x-10,y+160,0,0);
     }
 
 }
