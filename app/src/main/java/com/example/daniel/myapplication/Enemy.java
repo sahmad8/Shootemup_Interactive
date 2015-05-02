@@ -74,7 +74,6 @@ public class Enemy extends Entity{
             case 2:
                 this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.enemy3);
                 this.life = 100;
-                this.life = 10;
                 break;
             case 3:
 
