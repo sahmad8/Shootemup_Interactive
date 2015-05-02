@@ -49,6 +49,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     public static int score;
 
+    private int MissileCountDown;
+    private Paint p = new Paint();
+
 
 
     public MainGamePanel(Context context) {
@@ -72,6 +75,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
         axisX = 0;
         score = 0;
+
+
+        MissileCountDown = 0;
 
         // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
@@ -253,13 +259,18 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             t.setColor(Color.WHITE);
             canvas.drawText("Return to Menu", getWidth()/2, getHeight()*3/5+getHeight()/14, t);
         }
-        Paint p = new Paint();
+
         p.setColor(Color.DKGRAY);
-        canvas.drawRect(new RectF(0,getHeight()-90,getWidth(),getHeight()),p);
+        canvas.drawRect(new RectF(0, getHeight() - 90, getWidth(), getHeight()), p);
         p.setColor(Color.WHITE);
-        p.setTextSize(getWidth()/20);
-        canvas.drawText("Score:" + score,getWidth()*2/3,getHeight()-10,p );
-        canvas.drawText("Health: " + player1.getLife(),getWidth()/15, getHeight()-10,p);
+        p.setTextSize(getWidth() / 20);
+        canvas.drawText("Score:" + score, getWidth() * 2 / 3, getHeight() - 10, p);
+        canvas.drawText("Health: " + player1.getLife(), getWidth() / 15, getHeight() - 10, p);
+
+        //draw the missile cool down bar
+        p.setColor(Color.YELLOW);
+        if(MissileCountDown == 500){    p.setColor(Color.RED);  }
+        canvas.drawRect(new RectF(getWidth() / 15, getHeight() - 70, (getWidth() / 15)+(MissileCountDown/5), getHeight() - 60), p);
 
 
     }
@@ -284,13 +295,20 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
   */
     public void onSensorChanged(SensorEvent event) {
 
-        if(player1 != null){
+        if(player1 != null && running && !over){
+            MissileCountDown ++;
+            if(MissileCountDown >= 500){ MissileCountDown = 500;    }
+
             player1.setScreenWidth(getWidth());
             player1.setScreenHeight(getHeight());
             int type = event.sensor.getType();                        //integer
             axisX = event.values[0];
-            if (type == Sensor.TYPE_GYROSCOPE&&running&&!player1.spent) {
+            if (type == Sensor.TYPE_GYROSCOPE&&running&&!player1.spent&&(MissileCountDown == 500) ) {
                 if ((axisX < -7)) {
+                    MissileCountDown = 0;
+                    mp3power.start();
+                    player1.fireM();
+                    /*
                     // axisX=0;
                     if (!(mp3power.isPlaying())) {                  //sound effect. Already set when main game panel was created (-- look at the constructor).
                         // We just start it here.
@@ -298,6 +316,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                         player1.fireM();
 
                     }
+                    */
                 }
                 /*
                 Add code for creating nuke (type of bullet, but special). Have to make it travel upwards.
@@ -305,7 +324,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                  */
             }
 
-            if (running&&((axisX > 1.5) || (axisX < -1.5))) {
+            if ((axisX > 1.5) || (axisX < -1.5)) {
                 if (axisX > 0) {
                     if (player1.getX() == 0) {
                         return;
