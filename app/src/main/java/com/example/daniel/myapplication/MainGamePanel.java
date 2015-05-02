@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -19,7 +20,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
 
 import com.example.daniel.myapplication.test.SendScore;
 
@@ -52,6 +52,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     private int MissileCountDown;
     private Paint p = new Paint();
+    private boolean red = false;
+    private int cooldown = 0;
 
 
 
@@ -199,14 +201,20 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                             }
                         }
                     }
-                    if(collision(e,player1)){
+                    if(collision(e,player1)&&!player1.hit){
+                        player1.hit=true;
                         player1.setLife(player1.getLife()-5);
                         e.setLife(0);
+                        red = true;
+
                     }
                     for(Shot es : e.getShots()){
-                        if(collision(es,player1)){
+                        if(collision(es,player1)&&!player1.hit){
+                            player1.hit=true;
                             es.setAlive(false);
                             player1.setLife(player1.getLife()-3);
+                            red = true;
+
                         }
                     }
                 }
@@ -240,6 +248,16 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             if(player1.getLife()<=0){
                 over = true;
             }
+            if(!over&&red&&cooldown<5){
+                Paint g = new Paint();
+                g.setStyle(Style.FILL);
+                g.setARGB(100,255,0,0);
+                canvas.drawRect(new RectF(0,0,getWidth(),getHeight()),g);
+                cooldown++;
+            }else{
+                cooldown = 0;
+                red = false;
+            }
         }else{
             Paint t = new Paint();
             t.setColor(Color.WHITE);
@@ -259,8 +277,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             canvas.drawRect(new RectF(getWidth() / 5, getHeight() * 3 / 5, getWidth() * 4 / 5, getHeight() * 3 / 5 + getHeight()/9), t);
             t.setColor(Color.WHITE);
             canvas.drawText("Return to Menu", getWidth()/2, getHeight()*3/5+getHeight()/14, t);
-        }
 
+        }
         p.setColor(Color.DKGRAY);
         canvas.drawRect(new RectF(0, getHeight() - 90, getWidth(), getHeight()), p);
         p.setColor(Color.WHITE);

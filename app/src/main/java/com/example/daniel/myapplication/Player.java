@@ -32,6 +32,9 @@ public class Player extends Entity{
     private int changeY;
     public boolean spent = false;
 
+    public boolean hit = false;
+    public int cooldown = 0;
+
 
 
 
@@ -123,11 +126,21 @@ public class Player extends Entity{
     public void update(Canvas canvas){
 
         checkShots(canvas);
-
+        if(cooldown == 100){
+            cooldown = 0;
+            hit = false;
+        }
         //canvas.drawText(Integer.toString(Shots.size()),0,Integer.toString(Shots.size()).length(),50,50,new Paint());  // for debug, check shot number
         //canvas.drawText(Integer.toString(ScreenWidth),0,Integer.toString(ScreenWidth).length(),50,100,new Paint());
         //canvas.drawText(Integer.toString(ScreenWidth),0,Integer.toString(ScreenWidth).length(),50,100,new Paint());
-        droid.draw(canvas);
+        if(!hit ||  cooldown%20 <10) {
+            droid.draw(canvas);
+            if(hit) {
+                cooldown++;
+            }
+        }else{
+            cooldown++;
+        }
     }
 
     public void removeSArray(ArrayList<Shot> s){
