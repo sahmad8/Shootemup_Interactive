@@ -12,6 +12,9 @@ public class Enemies {
     private ArrayList<Enemy> eArray;
     private ArrayList<Shot> esArray;
     private ArrayList<Enemy> removeE;
+
+    private boolean BossCreated;
+
     //private ArrayList<Enemy> removeEGotShot;
     private int ScreenWidth;
     private int ScreenHeight;
@@ -25,6 +28,7 @@ public class Enemies {
         eArray = new  ArrayList<Enemy>();
         removeE = new  ArrayList<Enemy>();
         count1 = 0;
+        BossCreated = false;
     }
     public ArrayList<Enemy> getEArray(){
         return eArray;
@@ -48,14 +52,16 @@ public class Enemies {
             eArray.add(new Enemy(context, ScreenWidth, ScreenHeight, 0, 70, 0));
         }
         if(count3 == 50){
-            eArray.add(new Enemy(context, ScreenWidth, ScreenHeight, 0, 70, 2));
+            if(!BossCreated){
+                eArray.add(new Enemy(context, ScreenWidth, ScreenHeight, 0, 70, 2));
+            }
 
         }
         count1 = (count1 + 1)%40;
         //count2 = (count2 + 1)%40;
         //count3 = (count3 + 1)%40;
         if(count1==0){  count2 = (count2+1)%40;  }
-        if(count2==0){  count3 ++;  }
+        if(count2==0){  count3 = (count3 + 1)%51;  }
     }
     public void update(Canvas canvas, int Px, int Py){
         //canvas.drawText(Integer.toString(ScreenWidth),0,Integer.toString(ScreenWidth).length(),50,100,new Paint());
@@ -64,6 +70,7 @@ public class Enemies {
         // get the enemy that are dead
         for(Enemy e : eArray){
             if(e.getLife()<=0 && !e.ShotsAlive()){
+                if(e.getType()==2){ BossCreated = false;    }
                 removeE.add(e);
             }
         }

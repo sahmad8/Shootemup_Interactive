@@ -116,6 +116,7 @@ public class Player extends Entity{
     }
 
     public void setLife(int life) {
+        if(life<0){ life = 0;  }
         this.life = life;
     }
 

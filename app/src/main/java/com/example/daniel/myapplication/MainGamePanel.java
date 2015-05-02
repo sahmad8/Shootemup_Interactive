@@ -270,8 +270,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
         //draw the missile cool down bar
         p.setColor(Color.YELLOW);
-        if(MissileCountDown == 500){    p.setColor(Color.RED);  }
-        canvas.drawRect(new RectF(getWidth() / 15, getHeight() - 70, (getWidth() / 15) + (MissileCountDown / 5), getHeight() - 60), p);
+        if(MissileCountDown == 2500){    p.setColor(Color.RED);  }
+        canvas.drawRect(new RectF(getWidth() / 15, getHeight() - 70, (getWidth() / 15) + (MissileCountDown / 25), getHeight() - 60), p);
 
 
     }
@@ -298,13 +298,13 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
         if(player1 != null && running && !over){
             MissileCountDown ++;
-            if(MissileCountDown >= 500){ MissileCountDown = 500;    }
+            if(MissileCountDown >= 2500){ MissileCountDown = 2500;    }
 
             player1.setScreenWidth(getWidth());
             player1.setScreenHeight(getHeight());
             int type = event.sensor.getType();                        //integer
             axisX = event.values[0];
-            if (type == Sensor.TYPE_GYROSCOPE&&running&&!player1.spent&&(MissileCountDown == 500) ) {
+            if (type == Sensor.TYPE_GYROSCOPE&&running&&!player1.spent&&(MissileCountDown == 2500) ) {
                 if ((axisX < -7)) {
                     MissileCountDown = 0;
                     mp3power.start();
