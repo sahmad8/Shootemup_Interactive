@@ -1,7 +1,6 @@
 package com.example.daniel.myapplication;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
@@ -19,28 +18,17 @@ public class Player extends Entity{
     private ArrayList<Shot> Shots;
     private ArrayList<Shot> removeList;
 
-    private Context context;
-    //private int ScreenWidth;
-    //private int ScreenHeight;
-
-    private Droid droid;
-    private Bitmap bmp;
-
-    private int x;   // the X coordinate
-    private int y;   // the Y coordinate
-    private int changeX;
-    private int changeY;
     public boolean spent = false;
 
     public boolean hit = false;
     public int cooldown = 0;
 
-
-
-
-    private int life;   //player life
-
-    //Init Player
+    /**
+     * Initializes the values for the player such as image bitmap, health and shot storage.
+     * @param context
+     * @param ScreenWidth
+     * @param ScreenHeight
+     */
     public Player(Context context, int ScreenWidth, int ScreenHeight) {
         this.context = context;
         this.Shots = new ArrayList<Shot>();
@@ -62,22 +50,17 @@ public class Player extends Entity{
 
     }
 
+    /**
+     * @return the list of shots fired by the player.
+     */
     public ArrayList<Shot> getShots(){
         return Shots;
     }
-    @Override
-    public Bitmap getBmp(){
-        return bmp;
-    }
 
-
-
-    /*
-    Had to change the below method. Before it took a boolean. Now it takes the float value of the accelerometer reading
-    so we can apply a formula to make "how much the user tilts his phone" be a factor on how quickly
-    the player's position is changed. --SAAD
+    /**
+     * Changes the players position based on the magnitude of the provided value.
+     * @param value
      */
-
     public void ChangeX(float value){
         if(value > 0){    this.x -= (int)(1.95* value)  ; }
         else{   this.x += (int)(2.10)*value*-1;  }
@@ -87,42 +70,11 @@ public class Player extends Entity{
         droid.setX(x);
     }
 
-
-
-
-    //Set player x
-    public void setX(int x){
-        this.x = x;
-    }
-    @Override
-    public int getX(){
-        return x;
-    }
-
-
-    //Set player y
-    public void setY(int y){
-        this.y = y;
-    }
-    @Override
-    public int getY(){
-        return y;
-    }
-    /*
-    public void setScreenWidth(int ScreenWidth){
-        this.ScreenWidth = ScreenWidth;
-    }
-    */
-
-    public int getLife() {
-        return life;
-    }
-
-    public void setLife(int life) {
-        if(life<0){ life = 0;  }
-        this.life = life;
-    }
-
+    /**
+     * Calls the updates for the shots and updates condition variables for collision and
+     * invulnerability.
+     * @param canvas
+     */
     public void update(Canvas canvas){
 
         checkShots(canvas);
@@ -130,9 +82,6 @@ public class Player extends Entity{
             cooldown = 0;
             hit = false;
         }
-        //canvas.drawText(Integer.toString(Shots.size()),0,Integer.toString(Shots.size()).length(),50,50,new Paint());  // for debug, check shot number
-        //canvas.drawText(Integer.toString(ScreenWidth),0,Integer.toString(ScreenWidth).length(),50,100,new Paint());
-        //canvas.drawText(Integer.toString(ScreenWidth),0,Integer.toString(ScreenWidth).length(),50,100,new Paint());
         if(!hit ||  cooldown%20 <10) {
             droid.draw(canvas);
             if(hit) {
@@ -143,11 +92,20 @@ public class Player extends Entity{
         }
     }
 
+    /**
+     * Stores the provided shots to be removed later.
+     * @param s
+     */
     public void removeSArray(ArrayList<Shot> s){
         removeList.clear();
         removeList.addAll(s);
     }
 
+    /**
+     * Checks to make sure shot are still within the bounds of the screen. Updates the shots and
+     * missile. Detonates the missile after it has been created.
+     * @param canvas
+     */
     private void checkShots(Canvas canvas){
         if(ShotCreateCountDown<=0){
             Shots.add(new Shot(context,x+bmp.getWidth()/2,y,0,0,0));
@@ -168,7 +126,6 @@ public class Player extends Entity{
             Shots.remove(r);
         }
 
-
         for(Shot s: Shots){
             s.update(canvas);
         }
@@ -182,11 +139,12 @@ public class Player extends Entity{
                 missile = null;
             }
         }
-
-
     }
+
+    /**
+     * Creates a new Missile and adds it to the game world right in front of the player
+     */
     public void fireM(){
-        Log.d("stuff", "stuff");
         missile = new Missile(context,x-10,y+160,0,0);
     }
 

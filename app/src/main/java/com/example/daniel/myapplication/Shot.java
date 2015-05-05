@@ -1,7 +1,6 @@
 package com.example.daniel.myapplication;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
@@ -9,30 +8,24 @@ import android.graphics.Canvas;
  * Created by Kevin Tsai on 2015/4/11.
  */
 public class Shot extends Entity{
-    private Context context;
-
-    private int ScreenWidth;
-    private int ScreenHeight;
-
-    private Droid droid;
-    private Bitmap bmp;
-
-    private int x;   // the X coordinate
-    private int y;   // the Y coordinate
-    private int changeX;
-    private int changeY;
-    private boolean alive;
     private int damage;
-    private int type; // 0:player, 1:enemy
-
-    // y = ax + b direction of the shot
-    // x = (y-b)/a
     private float a;
     private float b;
+
+    /**
+     * initializes the values such as the image bitmap damage and position.
+     * @param context
+     * @param x
+     * @param y
+     * @param type
+     * @param Px
+     * @param Py
+     */
     public Shot(Context context, int x, int y, int type, int Px, int Py){
         this.context = context;
         this.a = 0;
         this.b = 0;
+        //determines which bitmap to use
         switch(type) {
             case(0):
                 this.bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.shot_1);
@@ -57,7 +50,12 @@ public class Shot extends Entity{
         this.droid = new Droid(this.bmp, this.x, this.y);
     }
 
-
+    /**
+     * Checks if the shot is within the bounds of the screen, if it is not it is set to dead to be
+     * removed
+     * @param ScreenWidth
+     * @param ScreenHeight
+     */
     public void checkAlive(int ScreenWidth, int ScreenHeight){
         switch(type){
             case(0):
@@ -82,50 +80,23 @@ public class Shot extends Entity{
         }
 
     }
-    @Override
-    public Bitmap getBmp() {
-        return bmp;
-    }
-    public boolean isAlive() {
 
-        return alive;
-    }
+    /**
+     * @return the preset damage assigned to the shot
+     */
     public int getDamage(){
         return damage;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public void setY(int y) {
-        this.y = y;
-    }
-
-
+    /**
+     * updates the position of the shot and its bitmap if the bitmap hasn't been recycled
+     * @param canvas
+     */
     public void update(Canvas canvas){
         if(!bmp.isRecycled()) {
             droid.draw(canvas);
         }
     }
 
-    public void recycle(){
-        bmp.recycle();
-    }
+
 }

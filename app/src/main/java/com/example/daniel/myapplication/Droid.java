@@ -13,63 +13,55 @@ public class Droid {
     private int y;   // the Y coordinate
     private boolean touched; // if droid is touched/picked up
 
+    /**
+     * Initialize the values with the provided values.
+     * @param bitmap
+     * @param x
+     * @param y
+     */
     public Droid(Bitmap bitmap, int x, int y) {
         this.bitmap = bitmap;
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * @return the bitmap that is drawn here
+     */
     public Bitmap getBitmap() {
         return bitmap;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-
-        this.bitmap = bitmap;
-    }
-
-
-    public int getX(){
-        return x;
-    }
-
+    /**
+     * Sets x to be the provided value
+     * @param x
+     */
     public void setX(int x) {
         this.x = x;
     }
 
+    /**
+     * @return the current value of y
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Sets y to be the provided value
+     * @param y
+     */
     public void setY(int y) {
         this.y = y;
     }
 
-    public boolean isTouched() {
-        return touched;
-    }
-
-    public void setTouched(boolean touched) {
-        this.touched = touched;
-    }
-
+    /**
+     * draws the bitmap to the canvas so it will be seen.
+     * @param canvas
+     */
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap,x, y, null);
     }
 
-    //for touch sensor, don't need it in our project. Could be used for debug.
-    public void handleActionDown(int eventX, int eventY) {
 
-        if (eventX >= (x - bitmap.getWidth() / 2) && (eventX <= (x + bitmap.getWidth()/2))) {
-            if (eventY >= (y - bitmap.getHeight() / 2) && (y <= (y + bitmap.getHeight() / 2))) {
-                // droid touched
-                setTouched(true);
-            } else {
-                setTouched(false);
-            }
-        } else {
-            setTouched(false);
-        }
-
-    }
 }

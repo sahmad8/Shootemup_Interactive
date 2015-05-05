@@ -41,7 +41,6 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     public MediaPlayer mp3menu;
 
     private Player player1;
-    //private Entity player1;
     private Enemies enemies;
     private Context context;
 
@@ -56,16 +55,21 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private int cooldown = 0;
 
 
-
+    /**
+     * Creates a new MainGamePanel, initializes sensors to the game and initial pictures and values.
+     * @param context
+     */
     public MainGamePanel(Context context) {
         super(context);
         this.context=context;
         theContext=context;
+        //set up all the sensors
         sManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sManager2 = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
         sManager2.registerListener(this, sManager2.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_GAME);
-        mp3menu= MediaPlayer.create(theContext, R.raw.menumusic);       //menu music, need to move this for the menu activity.
+        //menu music, need to move this for the menu activity
+        mp3menu= MediaPlayer.create(theContext, R.raw.menumusic);
         mp3power = MediaPlayer.create(theContext, R.raw.powernuke);
         //background
         this.bg1 = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.background1);
@@ -89,13 +93,14 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
 
-    }
-
+    /**
+     * Starts thread when created
+     * @param holder
+     */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
         // at this point the surface is created and
         // we can safely start the game loop
         thread = new MainThread(getHolder(), this);
@@ -103,6 +108,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         thread.start();
     }
 
+    /**
+     * Stops thread when destroyed
+     * @param holder
+     */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         // tell the thread to shut down and wait for it to finish
@@ -120,10 +129,14 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    /**
+     * Detects touch screen interactions to pause the game and interact with buttons
+     * @param event
+     * @return boolean based on super class implementation
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //thread.setRunning(!thread.getRunning());
             if(running) {
                 Log.d("Stuff", "stuff");
                 running = false;
@@ -154,24 +167,15 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
         }
         return super.onTouchEvent(event);
-        //return true;
     }
-    /*
-    @Override
-    protected void onDraw(Canvas canvas) {
-        // fills the canvas with cyan
-        canvas.drawColor(Color.CYAN);
-        player1.setScreenWidth(getWidth());
-        player1.setScreenHeight(getHeight());
-        //update player1 status
-        player1.update(canvas);
-    }
-    */
+
+    /**
+     * Redraws entities on the canvas to update their position, upadate their states, and remove dead entities
+     * @param canvas
+     */
     @Override
     public void draw(Canvas canvas) {
-        if(running&&!over) {
-            // fills the canvas with cyan
-            canvas.drawColor(Color.BLACK);
+        if(running&&!over) {//only updates when the game is running and not over
             if(droid1.getY()==0){
                 droid2.setY(0 - droid2.getBitmap().getHeight());
             }
@@ -186,21 +190,22 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 droid2.draw(canvas);
             }
 
-
             ArrayList<Enemy> tempE = new ArrayList<>();
             ArrayList<Shot> tempS = new ArrayList<>();
+            //checks if entities are dead
             if(player1!=null && enemies!=null){
                 for(Enemy e : enemies.getEArray()){
+                    //checks the player's shots have hit
                     for(Shot s : player1.getShots()){
                             if(collision(s,e)){
                             e.setLife(e.getLife()-s.getDamage());
-                            //tempE.add(e);
                             tempS.add(s);
                             if(e.getLife()<=0){
                                 score += 100;
                             }
                         }
                     }
+                    //checks if player has hit an enemy
                     if(collision(e,player1)&&!player1.hit){
                         player1.hit=true;
                         player1.setLife(player1.getLife()-5);
@@ -208,6 +213,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                         red = true;
 
                     }
+                    //checks if player is hit by an enemy shot
                     for(Shot es : e.getShots()){
                         if(collision(es,player1)&&!player1.hit){
                             player1.hit=true;
@@ -222,18 +228,12 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 player1.removeSArray(tempS);
             }
 
-
-
-
-
-
-
+            //first time set up for enemies and player and updates
             if (enemies == null) {
                 enemies = new Enemies(context, getWidth(), getHeight());
             } else {
                 enemies.update(canvas,player1.getX(),player1.getY());
             }
-
             if (player1 == null) {
                 player1 = new Player(context, getWidth(), getHeight());
                 mp3menu.start();
@@ -241,13 +241,16 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 //update player1 status
                 player1.update(canvas);
             }
+            //handles if the missile has been triggered
             if(player1.boom){
                 score += 100*enemies.clear();
                 player1.boom = false;
             }
+            //handles if the player died
             if(player1.getLife()<=0){
                 over = true;
             }
+            //damage indication
             if(!over&&red&&cooldown<5){
                 Paint g = new Paint();
                 g.setStyle(Style.FILL);
@@ -259,9 +262,11 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                 red = false;
             }
         }else{
+            //menu when the game is paused
             Paint t = new Paint();
             t.setColor(Color.WHITE);
             t.setTextAlign(Paint.Align.CENTER);
+            //extra button when the game is over to submit the score
             if(over){
                 t.setTextSize(getWidth()/6);
                 canvas.drawText("Game Over", getWidth()/2,getHeight()/5,t);
@@ -279,6 +284,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             canvas.drawText("Return to Menu", getWidth()/2, getHeight()*3/5+getHeight()/14, t);
 
         }
+        //GUI at the bottom of the screen
         p.setColor(Color.DKGRAY);
         canvas.drawRect(new RectF(0, getHeight() - 90, getWidth(), getHeight()), p);
         p.setColor(Color.WHITE);
@@ -293,6 +299,13 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 
     }
+
+    /**
+     * Checks if two entities have collided based on their bitmaps
+     * @param E1
+     * @param E2
+     * @return true if the entities bitmaps overlap, false otherwise
+     */
     private boolean collision(Entity E1, Entity E2){
         return ((E2.getX()<=E1.getX()+E1.getBmp().getWidth() && E1.getX()<=E2.getX()+E2.getBmp().getWidth()) ||
                 (E1.getX()<=E2.getX()+E2.getBmp().getWidth() && E2.getX()<=E1.getX()+E1.getBmp().getWidth())) &&
@@ -305,13 +318,14 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     }
 
-    /*
- Sensor changed event
- Used for when sensor values changed, called automatically.
- We implement accelerometer for moving player in a constant y plane.
- Also implement gyroscope. Feel free to change the threshold values in the if loops
- Depending on if you want to move the player faster or how fast the user must flick their phone forwards.
-  */
+    /**
+     * Sensor changed event
+     * Used for when sensor values changed, called automatically.
+     * We implement accelerometer for moving player in a constant y plane.
+     * Also implement gyroscope. Feel free to change the threshold values in the if loops
+     * Depending on if you want to move the player faster or how fast the user must flick their phone forwards.
+     * @param event
+     */
     public void onSensorChanged(SensorEvent event) {
 
         if(player1 != null && running && !over){
@@ -322,6 +336,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             player1.setScreenHeight(getHeight());
             int type = event.sensor.getType();                        //integer
             axisX = event.values[0];
+            //fires missle when Gyroscope is triggered and cooldown is done.
             if (type == Sensor.TYPE_GYROSCOPE&&running&&!player1.spent&&(MissileCountDown == 2500) ) {
                 if ((axisX < -7)) {
                     MissileCountDown = 0;
@@ -329,10 +344,6 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                     player1.fireM();
                     return;
                 }
-                /*
-                Add code for creating nuke (type of bullet, but special). Have to make it travel upwards.
-                Start at same x position of player. Above player's y position.
-                 */
             }
             if ((axisX > 1.85) || (axisX < -1.85)) {
                 if (axisX > 0) {

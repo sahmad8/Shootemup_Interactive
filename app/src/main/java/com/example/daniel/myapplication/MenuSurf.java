@@ -37,8 +37,6 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
         height = getHeight();
         width = getWidth();
         Button1 = new RectF(getWidth()/5,getHeight()*2/5,getWidth()*4/5,getHeight()*2/5+200);
-        Button2 = new RectF(100, 400, 500, 200);
-        Button3 = new RectF(100, 700, 500, 200);
 
         //background
         this.bg1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background1);
@@ -61,12 +59,7 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
                 running = false;
                 bg1.recycle();
                 bg2.recycle();
-            }else if(Button2.contains(event.getX(),event.getY())){
-
-            }else if(Button3.contains(event.getX(),event.getY())){
-
             }
-
         }
         return super.onTouchEvent(event);
     }
@@ -79,10 +72,12 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
 
-    }
-
+    /**
+     * Stops thread when destroyed
+     * @param holder
+     */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
@@ -97,13 +92,12 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * Draws the background, button and text on the screen along with updating the background.
+     * @param c
+     */
     public void draw(Canvas c){
         if(c!=null&&running) {
-            c.drawColor(Color.BLACK);
-
-
-
-            // fills the canvas with cyan
             if(droid1.getY()==0){
                 droid2.setY(0 - droid2.getBitmap().getHeight());
             }
@@ -124,15 +118,11 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
             p.setColor(Color.WHITE);
             p.setTextSize(getWidth() / 7);
             c.drawText("Galactic Clash", getWidth()/2, getHeight()/5, p);
-            //canvas.drawText("Galatctic Clash",width/2,height/5,new Paint());
             p.setTextSize(getWidth() / 15);
             p.setColor(Color.DKGRAY);
             c.drawRect(new RectF(getWidth()/5,getHeight()*2/5,getWidth()*4/5,getHeight()*2/5+getHeight()/9),p);
             p.setColor(Color.WHITE);
             c.drawText("New Game",getWidth()/2, getHeight()*2/5+getHeight()/14, p);
-
-            //c.drawRect(Button2,new Paint());
-            //c.drawRect(Button3,new Paint());
         }
     }
 }

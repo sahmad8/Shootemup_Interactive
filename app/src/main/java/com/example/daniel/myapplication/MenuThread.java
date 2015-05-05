@@ -24,6 +24,10 @@ public class MenuThread extends Thread {
         this.surfaceHolder = surfaceHolder;
         this.menu = menu;
     }
+
+    /**
+     * Game loop for the main menu that handles keeping th game at 60 fps and continually updating.
+     */
     @Override
     public void run(){
         long beginTime;		// the time when the cycle begun
