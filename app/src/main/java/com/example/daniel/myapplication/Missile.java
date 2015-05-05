@@ -44,7 +44,7 @@ public class Missile extends Entity {
     public void checkAlive(int ScreenWidth, int ScreenHeight){
           y -= 5;
           droid.setY(y);
-          if(ScreenHeight/4>droid.getY()) {
+          if(ScreenHeight>droid.getY()) {
               alive = false;
           }
 

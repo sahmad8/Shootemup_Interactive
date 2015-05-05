@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -40,6 +41,7 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
         pb=(ProgressBar)findViewById(R.id.progressBar1);
         pb.setVisibility(View.GONE);
         btn.setOnClickListener(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
 

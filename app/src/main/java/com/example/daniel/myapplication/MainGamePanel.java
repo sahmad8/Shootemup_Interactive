@@ -80,7 +80,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         score = 0;
 
 
-        MissileCountDown = 0;
+        MissileCountDown = 2500;
 
         // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);

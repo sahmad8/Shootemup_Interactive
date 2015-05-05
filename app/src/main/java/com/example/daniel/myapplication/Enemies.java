@@ -89,9 +89,13 @@ public class Enemies {
             if(e.getType()!=3){
                 e.setLife(e.getLife()-3);
             }
+            e.getShots().clear();
         }
         //eArray.clear();
-        esArray.clear();
+        for(Shot s: esArray){
+            s.setAlive(false);
+        }
+        //esArray.clear();
         return temp;
     }
 }
