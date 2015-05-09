@@ -30,6 +30,10 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
     private ProgressBar pb;
     private int playerscore;
 
+    /**
+     * Initializes the Activity values and creates the text feild and button.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +47,6 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
         btn.setOnClickListener(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,6 +70,10 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Displays a message when button is clicked if input is wrong. If input is correct it sends the input to the database.
+     * @param v
+     */
     public void onClick(View v) {
         // TODO Auto-generated method stub
         if(value.getText().toString().length()<1){

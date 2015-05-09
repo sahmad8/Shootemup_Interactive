@@ -11,22 +11,47 @@ public class MainThread extends Thread {
     private SurfaceHolder surfaceHolder;
     private MainGamePanel gamePanel;
     private boolean running;
+
+    /**
+     * Sets the running variable to the given value.
+     * @param running
+     */
     public void setRunning(boolean running) {
         this.running = running;
     }
+
+    /**
+     * @return the current value of running
+     */
     public boolean getRunning(){
         return running;
     }
+
+    /**
+     * Initializes the global variables for the thread.
+     * @param surfaceHolder
+     * @param gamePanel
+     */
     public MainThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel) {
         super();
         this.surfaceHolder = surfaceHolder;
         this.gamePanel = gamePanel;
     }
+
+    /**
+     * Initializes the values for a thread based on another thread.
+     * @param thread
+     */
     public MainThread(MainThread thread){
         super();
         this.surfaceHolder = thread.surfaceHolder;
         this.gamePanel = thread.gamePanel;
     }
+
+    /**
+     * Runs the game loop while limiting the FPS of the game. this calls the update method for the
+     * MainGamePanel and provides the canvas.
+     */
     @Override
     public void run() {
         long tickCount = 0L;

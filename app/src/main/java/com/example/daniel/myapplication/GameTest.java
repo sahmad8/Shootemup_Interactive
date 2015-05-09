@@ -13,6 +13,10 @@ public class GameTest extends Activity {
 
     private static final String TAG = GameTest.class.getSimpleName();
 
+    /**
+     * initializes the activity and applies MainGamePanel onto the screen
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

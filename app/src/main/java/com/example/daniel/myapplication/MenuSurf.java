@@ -30,6 +30,10 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
     private int width;
     private boolean running = true;
 
+    /**
+     * Initializes the values and sets up the scrolling background
+     * @param context
+     */
     public MenuSurf(Context context) {
         super(context);
         getHolder().addCallback(this);
@@ -47,6 +51,11 @@ public class MenuSurf extends SurfaceView implements SurfaceHolder.Callback {
         activity = context;Log.d("test", "test");
     }
 
+    /**
+     * Detects interactions with the touchscreen and will move to the GameTest activity when the button is pressed.
+     * @param event
+     * @return returns the super method result.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event){
         if(event.getAction()  == MotionEvent.ACTION_DOWN) {

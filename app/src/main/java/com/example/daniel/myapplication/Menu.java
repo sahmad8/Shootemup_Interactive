@@ -11,7 +11,10 @@ import android.view.WindowManager;
  */
 public class Menu extends Activity {
 
-
+    /**
+     * Initializes the new activity and sets the screen to show the MenuSurf
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

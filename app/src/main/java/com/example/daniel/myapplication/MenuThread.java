@@ -19,6 +19,11 @@ public class MenuThread extends Thread {
         this.running = running;
     }
 
+    /**
+     * Initializes the thread
+     * @param surfaceHolder
+     * @param menu
+     */
     public MenuThread(SurfaceHolder surfaceHolder, MenuSurf menu){
         super();
         this.surfaceHolder = surfaceHolder;

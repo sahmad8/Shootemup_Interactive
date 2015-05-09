@@ -96,7 +96,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
 
     /**
-     * Starts thread when created
+     * Starts thread when the surface is created
      * @param holder
      */
     @Override
@@ -170,7 +170,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     /**
-     * Redraws entities on the canvas to update their position, upadate their states, and remove dead entities
+     * Updates entities on the canvas to redraw them, update their states, and remove dead entities
      * @param canvas
      */
     @Override
@@ -182,7 +182,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             if(droid2.getY()==0){
                 droid1.setY(0 - droid1.getBitmap().getHeight());
             }
-
+            //scrolls the background
             droid2.setY(droid2.getY()+2);
             droid1.setY(droid1.getY()+2);
             if(!bg1.isRecycled()&&!bg2.isRecycled()) {
@@ -301,7 +301,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     /**
-     * Checks if two entities have collided based on their bitmaps
+     * Checks if two entities have collided based on their bitmaps boundaries
      * @param E1
      * @param E2
      * @return true if the entities bitmaps overlap, false otherwise
@@ -314,9 +314,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     /**
      * Sensor changed event
@@ -345,6 +343,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
                     return;
                 }
             }
+            //gets accelerometer value to detect which direction to move the player.
             if ((axisX > 1.85) || (axisX < -1.85)) {
                 if (axisX > 0) {
                     if (player1.getX() == 0) {
@@ -360,21 +359,5 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
         }
     }
-
-    /**
-    Sensor changed method test.
-    Dependent on hardware (motion). The sensor changed event is called automatically.
-    We only test for a change in player positions (since this has to change because motion was detected).
-    Precondition: Current player position.
-    Postcondition: Change in player position.
-     */
-     public void testsensor () {
-         //runs with sensor changed event
-         //@Before (before sensor changed event starts running), save player position, sensor values
-         //@After(after sensorchanged event completed), save players position again
-         //Something like--> assertEquals (beforepostiion, afterpostion), if sensor values > abs|2.5|, player position should have changed. Then-->
-         //If they were equal, throw an error exception. Something is wrong in the implementation of changing player position inside sensor changed event.
-         //Else if sensor values< abs|2.5| , positions should be equal.
-     }
 
 }
