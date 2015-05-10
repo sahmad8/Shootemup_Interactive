@@ -21,8 +21,9 @@
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
+        android:maxLength="10"
         android:ems="10"
-        android:hint=""
+        android:hint="10 chars"
         >
         <requestFocus />
     </EditText>

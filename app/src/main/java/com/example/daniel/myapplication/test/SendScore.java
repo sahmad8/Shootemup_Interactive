@@ -23,15 +23,28 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 
 
+/**
+ * @author Group 11 shootemupandroid
+ */
+
+/**
+ * Sendscore activity
+ * called when user clicks "sendscore" upon finishing game
+ */
+
 public class SendScore extends ActionBarActivity implements View.OnClickListener {
 
+    /**
+     * Variables which relate to xml of activity
+     */
     private EditText value;
     private Button btn;
     private ProgressBar pb;
     private int playerscore;
 
     /**
-     * Initializes the Activity values and creates the text feild and button.
+     * Initializes the Activity values and creates the text field and button.
+     * Recieves intent from game test activity (thescore)
      * @param savedInstanceState
      */
     @Override
@@ -71,13 +84,13 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
     }
 
     /**
-     * Displays a message when button is clicked if input is wrong. If input is correct it sends the input to the database.
-     * @param v
+     * Displays a message when button is clicked. If user inputs(atleast 1 character, otherwise toast is displayed) and clicks  the input to the database.
+     * Executes asynchronous task, sends name string
+     * @param view
      */
-    public void onClick(View v) {
+    public void onClick(View view) {
         // TODO Auto-generated method stub
-        if(value.getText().toString().length()<1){
-
+        if(value.getText().toString().length()<1){                                                 //atleast 1 character
             // out of range
             Toast.makeText(this, "please enter name", Toast.LENGTH_LONG).show();
         }else{
@@ -88,6 +101,11 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
 
     }
 
+    /**
+     * Asynchornous subclass, MyAsyncTask
+     * extends asynchronouse task
+     * overrides background method and execuutes http actions
+     */
     private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
 
         @Override
@@ -97,28 +115,42 @@ public class SendScore extends ActionBarActivity implements View.OnClickListener
             return null;
         }
 
+        /**
+         * onPosttExecute-displays toast upon http execute completion
+         * exits application
+         * @param result
+         */
         protected void onPostExecute(Double result) {
             pb.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), "command sent", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Score sent, Thank you for playing!!", Toast.LENGTH_LONG).show();
         }
 
+        /**
+         * onProgressUpdate-
+         * updates progress bar
+         * @param progress
+         */
         protected void onProgressUpdate(Integer... progress) {
             pb.setProgress(progress[0]);
         }
 
+        /**
+         * poData-handles http actions
+         * called when user clicks submit-then asynchronous task is created and calls this method
+         * Uses http address of our servlet code for onPost (for our webapplciation which holds all the scores)
+         * @param valueIWantToSend
+         */
         public void postData(String valueIWantToSend) {
-            // Create a new HttpClient and Post Header
+            // Create new HttpClient and HTTPPOST
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://1-dot-galacticlashandroid.appspot.com/test");
+            HttpPost httppost = new HttpPost("http://1-dot-galacticlashandroid.appspot.com/test");     //this is the url of our post servlet for our web application
             try {
-                // Add your data
+                // Add the score and player name
                 String scorestring=""+playerscore;
-                httppost.addHeader("thename", valueIWantToSend);
-                httppost.addHeader("score", scorestring);
-                HttpResponse response = httpclient.execute(httppost);
-                //Intent newgame= new Intent(SendScore.this, Menu.class);            //comment this out to get rid of the error
-                //startActivity(newgame);
-                finish();
+                httppost.addHeader("thename", valueIWantToSend);               //name added, given the identifier "thename"
+                httppost.addHeader("score", scorestring);                      //score added, given the identifier "score"
+                HttpResponse response = httpclient.execute(httppost);           //currently, no response is returned by webiste
+                finish();                                                       //done, our webapp will use the identifiers to get the score.
             } catch (ClientProtocolException e) {
                 // TODO Auto-generated catch block
             } catch (IOException e) {

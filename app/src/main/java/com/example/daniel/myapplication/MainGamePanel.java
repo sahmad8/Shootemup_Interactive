@@ -35,10 +35,12 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     private float axisX;
     private boolean running = false;
     private boolean over = false;
+    private boolean played_over_music = false;
 
     private MainThread thread;
     public MediaPlayer mp3power;
     public MediaPlayer mp3menu;
+    public MediaPlayer mp3end;
 
     private Player player1;
     private Enemies enemies;
@@ -71,6 +73,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         //menu music, need to move this for the menu activity
         mp3menu= MediaPlayer.create(theContext, R.raw.menumusic);
         mp3power = MediaPlayer.create(theContext, R.raw.powernuke);
+        mp3end =  MediaPlayer.create(theContext, R.raw.end);
         //background
         this.bg1 = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.background1);
         droid1 = new Droid(bg1,0,0);
@@ -118,6 +121,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         // this is a clean shutdown
         running = false;
         boolean retry = true;
+        mp3menu.stop();
+        mp3menu.release();
+        mp3menu=null;
         while (retry) {
             try {
                 thread.setRunning(false);
@@ -237,6 +243,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             if (player1 == null) {
                 player1 = new Player(context, getWidth(), getHeight());
                 mp3menu.start();
+                mp3menu.setLooping(true);
             } else {
                 //update player1 status
                 player1.update(canvas);
@@ -267,8 +274,13 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
             t.setColor(Color.WHITE);
             t.setTextAlign(Paint.Align.CENTER);
             //extra button when the game is over to submit the score
-            if(over){
+            if(over){                                                   //player life has finished. Game is over
                 t.setTextSize(getWidth()/6);
+                if (!played_over_music)
+                {
+                    mp3end.start();                                      //play sound effect for end of game (only once)
+                    played_over_music=true;
+                }
                 canvas.drawText("Game Over", getWidth()/2,getHeight()/5,t);
                 t.setColor(Color.DKGRAY);
                 canvas.drawRect(new RectF(getWidth() / 5, getHeight() * 4 / 5, getWidth() * 4 / 5, getHeight() * 4 / 5 + getHeight()/9), t);

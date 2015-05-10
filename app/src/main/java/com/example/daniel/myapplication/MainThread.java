@@ -3,6 +3,7 @@ package com.example.daniel.myapplication;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 public class MainThread extends Thread {
 
